@@ -21,7 +21,7 @@
 = Analisi e specifica dei requisiti
 == Nomi-verbi
 Si vuole realizzare un software per una cooperativa di pescatori. 
-La cooperativa ha una sede in cui i pescatori portano al mattino il pescato fresco, dotata di un magazzino (per la 
+La cooperativa ha una sede in cui i #attore[pescatori] portano al mattino il pescato fresco, dotata di un magazzino (per la 
 conservazione di pescato congelato). Nella sede si preparano le consegne da effettuare ai clienti, e da essa partono i 
 camioncini, guidati dai fattorini.  
 
@@ -55,6 +55,52 @@ cliente, e con il totale complessivo del venduto.]
 === Riassunto del primo incontro con gli stakeholders
 In questo primo incontro hanno partecipato il gestore della cooperativa, diversi rappresentanti di alcuni ristoranti e pescherie, un rappresentante dei fattorini e dei dipendenti della cooperativa.
 
+E' presente un solo magazzino, questo non cambierà nel medio termine.
+
+Non sarà necessariamente il gestore della cooperativa a registrare i nuovi clienti i nuovi impiegati e i nuovi fattorini.
+
+E' possibile visualizzare i prodotti disponibili senza effettuare il login, ma le restanti operazioni richiedono un login.
+
+I pescatori non accedono in prima persona al software, invece è un impiegato a registrare i prodotti a nome loro, il software però deve tenere traccia dei pescatori e della loro relazione con i prodotti.
+
+Gli impiegati preparano gli ordini arrivati fino a quel momento(quindi anche un ordine arrivato pochi minuti prima) la mattina(l'orario specifico non viene riportato in quanto non ritenuto necessario per il software), dopo un determinato orario gl istessi impiegati saranno occupati a registrare i prodotti provenienti dai pescatori.
+
+Il software deve generare settimanalmente le fatture per i clienti. Le fatture sono in formato XML e compatibile con il sistema di interscambio dell'agenzia delle entrate.
+
+Per ogni cliente, il software dele registrare il _codice univoco_ necessario per la fatturazione.
+
 Da un primo incontro con gli stakeholders è risultato necessaria un interfaccia dinamica, che permetta con facilità l'inserimento di nuovi dipendenti(in particolare i fattorini) e che questi siano automaticamente registrati al sistema di login. Risulta necessario poi tenere traccia dei prezzi effettivi all'interno degli ordini, in quanto i prezzi cambiano in rapida frequenza.
 Un interfaccia web non è stata ritenuta necessaria nell'immediata, e potrà essere considerata per una versione successiva del software,
 in tale ambito è esclusa un interfaccia grafica non web, in quanto i fattorini userebbero dispositivi diversi tra di loro per accedere al sistema.
+
+== Revisione Requisiti
++ Alcuni impiegati possono registrare nuovi clienti, nuovi impiegati e nuovi fattorini nel software.
++ Un cliente è definito da un tipo(pescheria o ristante), un indirizzo, indirizzo e-mail, un username e una password (usati per il login) e dal _codice univoco_(necessario per la fatturazione).
++ Impiegati e fattorini sono definiti da un username _univoco_ ed hanno un nome e una password.
++ I pescatori non hanno accesso al software.
++ Il software tiene traccia dei pescatori e di quali prodotti hanno fornito.
++ E' possibile, tramite al software, visualizzare i prodotti disponibili.
++ I clienti possono, dopo aver effettuato il login, creare un nuovo ordine
++ Gli impiegati si occupano della preparazione degli ordini e della registrazione dei prodotti.
++ La preparazione degli ordini e la registrazione dei prodotti devono essere eseguite ripetutamente e velocemente, difficilmente si passa da un attività ad un altra.
++ Un impiegato non può iniziare la preparazione di un ordine già in preparazione da un altro impiegato.
++ Ogni lunedì mattina viene creato un nuovo report.
++ Un report può essere anche tramite richiesta manuale.
++ Un report è una lista _ordinata per cliente_ dei prodotti venduti.
++ Un report contiene il totale del venduto, sia singolarmente per cliente sia totale.
++ Ogni lunedì mattina viene creata una fattura per ogni cliente.
++ Ogni fattura è specifica per un cliente e contiene una lista di prodotti venduti con il relativo costo, inoltre è presente il costo totale.
++ Le fatture generate automaticamente dal software vengono inviate automaticamente elettronicamente tramite il sistema di interscambio.
+
+== Glossario
+#table(
+	columns: (1fr, 1fr, 1fr),
+	inset: 5pt,
+	align: horizon,
+	[*Termine*], [*Descrizione*], [*Sinonimi*],
+	[Prodotto], [Un pesce, mollusco, _etc..._, qualsiasi cosa possa essere pescato e venduto], [],
+	[Impiegato], [Dipendente della cooperativa, sono esclusi pescatori e dipendente di altre aziende(pescherie e ristoranti)], [],
+	[Cliente], [Una pescheria o un ristorante registrati al software], [],
+)
+
+
