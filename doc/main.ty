@@ -1,0 +1,60 @@
+#set text(lang: "it")
+#set footnote(numbering: "i")
+#set heading(numbering: "1.1")
+
+#align(center, rect(
+    inset: 5pt,
+    [#rect(
+    width: 70%,
+    [
+		#align(center, smallcaps(text(20pt)[*Cooperativa pescatori dzuk*]))
+		#align(center, [Giovanni Spera #h(1cm) #link("mailto:gui.spera@studenti.unina.it")])
+    ])
+]))
+
+#let attore(x) = box(fill: yellow, inset: 1pt)[#x]
+#let classe(x) = box(fill: purple, inset: 1pt)[#x]
+#let attributo(x) = box(fill: green, inset: 1pt)[#x]
+#let classeAttore(x) = box(fill: blue, inset: 1pt)[#x]
+#let funzionalita(x) = box(fill: red, inset: 1pt)[#x]
+
+= Analisi e specifica dei requisiti
+== Nomi-verbi
+Si vuole realizzare un software per una cooperativa di pescatori. 
+La cooperativa ha una sede in cui i pescatori portano al mattino il pescato fresco, dotata di un magazzino (per la 
+conservazione di pescato congelato). Nella sede si preparano le consegne da effettuare ai clienti, e da essa partono i 
+camioncini, guidati dai fattorini.  
+
+#attore[Il gestore della cooperativa] registra nel sistema pescherie e ristoranti clienti - inserendo il #attributo[tipo] (pescheria o ristorante), #attributo[nome pescheria/ristorante], #attributo[indirizzo], #attributo[e-mail], #attributo[username], #attributo[password] - e i #classeAttore[fattorini] (#attributo[nome], #attributo[username], #attributo[password]).
+Il gestore può inoltre inserire le tipologie di #classe[prodotti], ognuna identificata da un #attributo[codice], una #attributo[categoria] (e.g., pesci, crostacei, molluschi, etc.), un 
+#attributo[tipo] (verace, allevamento, congelato), una #attributo[descrizione] e il #attributo[prezzo] (al Kg).  
+ 
+I #classeAttore[ristoranti] e le #classeAttore[pescherie] clienti possono #funzionalita[consultare il sistema per visualizzare i prodotti con i prezzi]. Solo i #attore[clienti registrati] dal gestore possono accedere al sistema per #funzionalita[inviare ordini]. Una volta effettuato l'accesso, una pescheria o un ristorante 
+cliente può selezionare i prodotti da acquistare dalla cooperativa - che dovranno essere consegnati il giorno dopo - 
+specificando le rispettive #attributo[quantità]; il sistema predispone l’#classe[ordine] e lo #funzionalita[invia per e-mail] alla cooperativa.  
+ 
+Uno o più #attore[impiegati della cooperativa] #funzionalita[ricevono gli ordini] e, al mattino presto, preparano le consegne affidate ai fattorini. A 
+ciascun fattorino un impiegato consegna ogni mattina: #funzionalita[una stampa dell’elenco] di pescherie e ristoranti dove effettuare le 
+consegne, e per ciascuna consegna l’#classe[elenco dei prodotti] (con #attributo[prezzo al Kg], #attributo[quantità] ordinata, e #attributo[prezzo totale]), che il 
+fattorino farà firmare al cliente alla consegna. Effettuata una consegna, il #attore[fattorino] accede al sistema per #funzionalita[registrare che 
+l’ordine è stato consegnato] (il sistema registra data e ora di consegna). 
+ 
+Ogni settimana #funzionalita[il sistema genera in maniera automatica ed invia a ciascuna pescheria e a ciascun ristorante una fattura con 
+l’elenco degli ordini della settimana, e l’importo complessivo.]
+Ogni settimana, inoltre, il sistema #funzionalita[invia al gestore della cooperativa un report degli ordini, ordinato per pescheria/ristorante 
+cliente, e con il totale complessivo del venduto.] 
+
+=== Legenda
+#attore[Attore]
+#classe[Classe]
+#attributo[Attributo]
+#classeAttore[Classe-Attore]
+#funzionalita[Funzionalita]
+
+== Revisione requisiti
+=== Riassunto del primo incontro con gli stakeholders
+In questo primo incontro hanno partecipato il gestore della cooperativa, diversi rappresentanti di alcuni ristoranti e pescherie, un rappresentante dei fattorini e dei dipendenti della cooperativa.
+
+Da un primo incontro con gli stakeholders è risultato necessaria un interfaccia dinamica, che permetta con facilità l'inserimento di nuovi dipendenti(in particolare i fattorini) e che questi siano automaticamente registrati al sistema di login. Risulta necessario poi tenere traccia dei prezzi effettivi all'interno degli ordini, in quanto i prezzi cambiano in rapida frequenza.
+Un interfaccia web non è stata ritenuta necessaria nell'immediata, e potrà essere considerata per una versione successiva del software,
+in tale ambito è esclusa un interfaccia grafica non web, in quanto i fattorini userebbero dispositivi diversi tra di loro per accedere al sistema.
