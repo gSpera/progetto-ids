@@ -74,7 +74,7 @@ Un interfaccia web non è stata ritenuta necessaria nell'immediata, e potrà ess
 in tale ambito è esclusa un interfaccia grafica non web, in quanto i fattorini userebbero dispositivi diversi tra di loro per accedere al sistema.
 
 == Revisione Requisiti
-+ Alcuni impiegati possono registrare nuovi clienti, nuovi impiegati e nuovi fattorini nel software.
++ Alcuni impiegati possono registrare nuovi clienti, nuovi impiegati e/o nuovi fattorini nel software.
 + Un cliente è definito da un tipo(pescheria o ristante), un indirizzo, indirizzo e-mail, un username e una password (usati per il login) e dal _codice univoco_(necessario per la fatturazione).
 + Impiegati e fattorini sono definiti da un username _univoco_ ed hanno un nome e una password.
 + I pescatori non hanno accesso al software.
