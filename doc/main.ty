@@ -65,7 +65,8 @@ I pescatori non accedono in prima persona al software, invece è un impiegato a 
 
 Gli impiegati preparano gli ordini arrivati fino a quel momento(quindi anche un ordine arrivato pochi minuti prima) la mattina(l'orario specifico non viene riportato in quanto non ritenuto necessario per il software), dopo un determinato orario gl istessi impiegati saranno occupati a registrare i prodotti provenienti dai pescatori.
 
-Il software deve generare settimanalmente le fatture per i clienti. Le fatture sono in formato XML e compatibile con il sistema di interscambio dell'agenzia delle entrate.
+Il software deve generare settimanalmente le fatture per i clienti.
+Le fatture sono in formato XML e compatibile con il sistema di interscambio dell'agenzia delle entrate.
 
 Per ogni cliente, il software dele registrare il _codice univoco_ necessario per la fatturazione.
 
@@ -107,7 +108,7 @@ in tale ambito è esclusa un interfaccia grafica non web, in quanto i fattorini 
 === Requisiti funzionali
 #table(
 	columns: (1fr, 1fr, 1fr),
-	inset: 5pt,
+	inset: 3pt,
 	align: horizon,
 	[*ID*], [*Requisito*], [*Origine*],
 	[RF01], [Alcuni impiegati possono registrare nuovi clienti], [2],
@@ -137,7 +138,7 @@ in tale ambito è esclusa un interfaccia grafica non web, in quanto i fattorini 
 === Requisiti sui dati
 #table(
 	columns: (1fr, 1fr, 1fr),
-	inset: 5pt,
+	inset: 3pt,
 	align: horizon,
 	[*ID*], [*Requisito*], [*Origine*],
 	[RD01], [Ciascun cliente può essere una pescheria o un ristorante], [1],
@@ -146,4 +147,146 @@ in tale ambito è esclusa un interfaccia grafica non web, in quanto i fattorini 
 	[RD04], [Ciascun impigati dispone di un username e una password per effettuare il login], [3],
 	[RF05], [Ciascun fattorino disponde di un username e una password per effettuare il login], [3],
 	[RF06], [Il software deve tenere traccia dei pescatori e quali prodotti hanno venduto], [5],
+	[RF07], [E' necessario registrare gli ordini creati], [7],
+	[RF08], [Il software deve registrare se un ordine è già in preparazione], [10],
+	[RF09], [Il software deve tenere traccia dei prodotti venduti e del loro prezzo], [12],
+	[RF10], [Per ogni prodotto venduto il software deve tenere traccia del cliente a cui è stato venduto], [12],
+	[RF11], [Il software deve tenere traccia se un prodotto è stato già fatturato], [16],
+)
+
+=== Vincoli e altri requisiti
+#table(
+	columns: (1fr, 1fr),
+	inset: 3pt,
+	align: horizon,
+	[*ID*], [*Requisito*],
+	[RNF01], [Il sistema deve essere collegato ad internet per poter accedere al sistema di interscambio],
+	[RNF02], [Il sistema deve avere modo di tenere traccia del tempo],
+	[RNF03], [Il sistema deve permettere l'accesso simultaneo di più utenti],
+	[RNF04], [Il sistema deve poter salvare i dati in modo permanente],
+)
+
+== Modellizione dei casi d'uso
+#grid(
+	columns: (1fr, 1fr),
+	
+	[
+		*Attori primari*:
+		- Gestore della cooperativa
+		- Impiegato
+		- Cliente
+		- Tempo
+		- Fattorino
+	],[
+		*Attori secondari*:
+		- Servizio interscambio agezia delle entrate
+	],
+)
+
+#table(
+	columns: (1fr, 2fr),
+	inset: 5pt,
+	align: horizon,
+	[*Caso d'uso*], [*Registrazione cliente*],
+	[*Attore Primario*], [Impiegato o Gestore della Cooperativa],
+	[*Attore Secondario*], [Cliente],
+	[*Descrizione*], [Viene registrato un nuovo cliente nel software],
+	[*Pre-Condizioni*], [L'impiegato ha il permesso di registrare nuovi clienti],
+	[*Sequenza di eventi principale*], [
+		1. L'impiegato o il gestore della cooperativa effettua il login al software
+		2. L'utente seleziona di voler registrare un cliente
+		3. L'utente inserisce i dati del cliente
+	],
+	[*Post-Condizioni*], [Il cliente viene registrato nel software],
+	[*Casi d'uso correlati*], [],
+	[*Sequenza di eventi alternativi*], [
+		L'utente riceve un messaggio di errore se i dati sono erronei o nel caso ci sia un errore interno al software],
+)
+
+#table(
+	columns: (1fr, 2fr),
+	inset: 5pt,
+	align: horizon,
+	[*Caso d'uso*], [*Registrazione impiegato*],
+	[*Attore Primario*], [Impiegato o Gestore della Cooperativa],
+	[*Attore Secondario*], [Cliente],
+	[*Descrizione*], [Viene registrato un nuovo impiegato nel software],
+	[*Pre-Condizioni*], [L'impiegato ha il permesso di registrare nuovi impiegati],
+	[*Sequenza di eventi principale*], [
+		1. L'impiegato o il gestore della cooperativa effettua il login al software
+		2. L'utente seleziona di voler registrare un nuovo impiegato
+		3. L'utente inserisce i dati del nuovo impiegato
+	],
+	[*Post-Condizioni*], [Il nuovo impiegato viene registrato nel software],
+	[*Casi d'uso correlati*], [],
+	[*Sequenza di eventi alternativi*], [
+		L'utente riceve un messaggio di errore se i dati sono erronei o nel caso ci sia un errore interno al software],
+)
+
+#table(
+	columns: (1fr, 2fr),
+	inset: 5pt,
+	align: horizon,
+	[*Caso d'uso*], [*Registrazione prodotto*],
+	[*Attore Primario*], [Impiegato],
+	[*Attore Secondario*], [Pescatore],
+	[*Descrizione*], [L'impiegato registra il prodotto venduto dal pescatore],
+	[*Pre-Condizioni*], [L'impiegato ha effettuato il login],
+	[*Sequenza di eventi principale*], [
+		1. L'impiegato inserisce i dati del prodotto
+	],
+	[*Post-Condizioni*], [Il nuovo prodotto viene registrato],
+	[*Casi d'uso correlati*], [],
+	[*Sequenza di eventi alternativi*], [],
+)
+
+#table(
+	columns: (1fr, 2fr),
+	inset: 5pt,
+	align: horizon,
+	[*Caso d'uso*], [*Visualizzazione inventario*],
+	[*Attore Primario*], [Cliente o utente generico],
+	[*Attore Secondario*], [],
+	[*Descrizione*], [Il cliente visualizza i prodotti in vendita],
+	[*Pre-Condizioni*], [],
+	[*Sequenza di eventi principale*], [
+		1. L'utente si collega al software e, opzionalmente, effettua il login
+		2. L'utente seleziona di voler visualizzare l'inventario
+	],
+	[*Post-Condizioni*], [L'inventario di prodotti disponibili viene mostrato],
+	[*Casi d'uso correlati*], [Aquisto prodotto],
+	[*Sequenza di eventi alternativi*], [],
+)
+
+#table(
+	columns: (1fr, 2fr),
+	inset: 5pt,
+	align: horizon,
+	[*Caso d'uso*], [*Acquisto prodotti*],
+	[*Attore Primario*], [Cliente],
+	[*Attore Secondario*], [],
+	[*Descrizione*], [Il cliente effettua un ordine],
+	[*Pre-Condizioni*], [Il cliente ha effettuato il login],
+	[*Sequenza di eventi principale*], [
+		1. Il cliente seleziona i prodotti da ordinare
+		2. Il cliente conferma la selezione e il costo
+	],
+	[*Post-Condizioni*], [L'ordine viene registrato nel software],
+	[*Casi d'uso correlati*], [Visualizzazione inventario],
+	[*Sequenza di eventi alternativi*], [Il cliente annulla l'acquisto, prima della conferma],
+)
+
+#table(
+	columns: (1fr, 2fr),
+	inset: 5pt,
+	align: horizon,
+	[*Caso d'uso*], [**],
+	[*Attore Primario*], [],
+	[*Attore Secondario*], [],
+	[*Descrizione*], [],
+	[*Pre-Condizioni*], [],
+	[*Sequenza di eventi principale*], [],
+	[*Post-Condizioni*], [],
+	[*Casi d'uso correlati*], [],
+	[*Sequenza di eventi alternativi*], [],
 )

@@ -1,0 +1,38 @@
+@startuml
+left to right direction
+actor "Gestore Cooperativa" as gestore
+actor "Impiegato" as imp 
+actor "Cliente" as cliente
+actor "Utente\nNon loggato" as utente
+actor "Pescatore" as pescatore
+actor "Pescheria" as cliente_pescheria
+actor "Ristorante" as cliente_ristorante
+
+cliente_ristorante -down-|> cliente
+cliente_pescheria  -down-|> cliente
+
+rectangle "Software dzuk" {
+    usecase "Registrazione cliente" as registra_cliente
+    usecase "Registrazione impiegato" as registra_impiegato
+    usecase "Registrazione prodotto" as registra_prodotto
+    usecase "Visualizzazione inventario" as visualizza_inventario
+    usecase "Acquisto prodotti" as acquisto_prodotti
+}
+
+imp     -- registra_cliente
+note bottom of link
+    L'impiegato deve essere abilitato
+    per la registrazione dei clienti
+end note
+imp     -- registra_impiegato
+note bottom of link
+    L'impiegato deve essere abilitato
+    per la registrazione degli impiegati
+end note
+
+registra_cliente   -- gestore
+registra_impiegato -- gestore
+registra_prodotto  -- impiegato
+registra_prodotto  -- pescatore
+note on link: Secondario
+@enduml
