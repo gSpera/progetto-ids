@@ -1,6 +1,10 @@
 #set text(lang: "it")
 #set footnote(numbering: "i")
 #set heading(numbering: "1.1")
+#set par(justify: true)
+#set page(
+	numbering: (..nums) => nums.pos().map(str).join(" di "),
+)
 
 #align(center, rect(
     inset: 5pt,
@@ -70,6 +74,11 @@ Le fatture sono in formato XML e compatibile con il sistema di interscambio dell
 
 Per ogni cliente, il software dele registrare il _codice univoco_ necessario per la fatturazione.
 
+Ciascun ordine viene assegnato a un solo fattorino, come avviene la scelta del fattorino non è stato definito con precisione, dovrebbe essere ottimale.
+
+I fattorini devono poter visualizzare gli ordini loro affidati prima delle consegne.
+Poichè i fattorini spesso si organizzano individualmente ogni fattorino può indicare come consegnato qualsiasi ordine, non è richiesto che il software controlli che l'ordine sia stato affidato a quello specifico fattorino.
+
 Da un primo incontro con gli stakeholders è risultato necessaria un interfaccia dinamica, che permetta con facilità l'inserimento di nuovi dipendenti(in particolare i fattorini) e che questi siano automaticamente registrati al sistema di login. Risulta necessario poi tenere traccia dei prezzi effettivi all'interno degli ordini, in quanto i prezzi cambiano in rapida frequenza.
 Un interfaccia web non è stata ritenuta necessaria nell'immediata, e potrà essere considerata per una versione successiva del software,
 in tale ambito è esclusa un interfaccia grafica non web, in quanto i fattorini userebbero dispositivi diversi tra di loro per accedere al sistema.
@@ -90,8 +99,11 @@ in tale ambito è esclusa un interfaccia grafica non web, in quanto i fattorini 
 + Un report contiene il totale del venduto, sia singolarmente per cliente sia totale.
 + Ogni lunedì mattina viene creata una fattura per ogni cliente.
 15. Ogni fattura è specifica per un cliente e contiene una lista di prodotti venduti con il relativo costo, inoltre è presente il costo totale.
-+ I prodotti possono essere fatturati una sola volta
-+ Le fatture generate automaticamente dal software vengono inviate automaticamente elettronicamente tramite il sistema di interscambio.
++ I prodotti possono essere fatturati una sola volta.
++ Le fatture generate automaticamente dal software vengono inviate automaticamente elettronicamente tramite il sistema di interscambio..
++ I fattorini possono visuallizare le proprie spedizioni.
++ I fattorini possono indicare come _consegnato_ qualsiasi ordine.
++ Ciascun ordine viene assegnato ad uno, ed un solo, fattorino
 
 == Glossario
 #table(
@@ -134,6 +146,9 @@ in tale ambito è esclusa un interfaccia grafica non web, in quanto i fattorini 
 	[RF20], [Ciascuna fattura deve riportare il costo totale], [15],
 	[RF21], [Ciascun prodotto può essere presente in una sola fattura], [16],
 	[RF22], [Ciascuna fattura deve essere inviata automaticamente al sistema di interscambio dell'agenzia delle entrate], [17],
+	[RF23], [Ciascun ordine viene assegnato a un fattorino], [20],
+	[RF24], [I fattorini possono visualizzare le proprie spedizioni], [18],
+	[RF25], [Ciascun fattorino può indicare come consegnato qualsiasi ordine], [19],
 )
 === Requisiti sui dati
 #table(
@@ -169,6 +184,7 @@ in tale ambito è esclusa un interfaccia grafica non web, in quanto i fattorini 
 == Modellizione dei casi d'uso
 #grid(
 	columns: (1fr, 1fr),
+	gutter: 5pt,
 	
 	[
 		*Attori primari*:
@@ -181,7 +197,35 @@ in tale ambito è esclusa un interfaccia grafica non web, in quanto i fattorini 
 		*Attori secondari*:
 		- Servizio interscambio agezia delle entrate
 	],
+
+	[
+		*Casi d'uso di inclusione*:
+		- Visualizzazione inventario
+	],
+	[
+		*Casi d'uso di estensione*:
+	]
 )
+
+#table(
+	columns: (2fr, 1fr, 1fr, 1fr),
+	inset: 5pt,
+	align: horizon,
+	[*Caso d'uso*], [*Attori primari*], [*Attori secondari*], [* Incl./Ext.*],
+
+    [Registrazione cliente], [Impiegato, Gestore Cooperativa], [Cliente], [],
+    [Registrazione impiegato], [Impiegato, Gestore Cooperativa], [Impiegato], [],
+    [Registrazione prodotto], [Impiegato], [Pescatore], [],
+    [Visualizzazione inventario], [Cliente, Utente non loggato], [], [],
+    [Acquisto prodotti], [Cliente], [], [Visuallizaione inventario],
+    [Genera report], [Tempo, Gestore Cooperativa], [], [],
+    [Visualizza report], [Gestore Cooperativa], [], [],
+    [Genera e invia fattura], [Tempo], [Sistema d'intescambio], [],
+    [Visualizza spedizioni], [Fattorino], [], [],
+    [Conferma consegna], [Fattorino], [], [],
+)
+=== Diagramma dei casi d'uso
+#image("casi-duso.svg")
 
 #table(
 	columns: (1fr, 2fr),
@@ -280,6 +324,95 @@ in tale ambito è esclusa un interfaccia grafica non web, in quanto i fattorini 
 	columns: (1fr, 2fr),
 	inset: 5pt,
 	align: horizon,
+	[*Caso d'uso*], [*Genera report*],
+	[*Attore Primario*], [Tempo, Gestore Cooperativa],
+	[*Attore Secondario*], [],
+	[*Descrizione*], [Viene generato il report settimanale],
+	[*Pre-Condizioni*], [E' lunedì, o è stato scelto di generare un report e il gestore ha effettuato il login],
+	[*Sequenza di eventi principale*], [
+		1. Il software raccoglie tutti i prodotti venduti
+		2. Il software genera il report
+		3. Il software salva su file il report
+	],
+	[*Post-Condizioni*], [Viene creato un file di report],
+	[*Casi d'uso correlati*], [],
+	[*Sequenza di eventi alternativi*], [],
+)
+
+#table(
+	columns: (1fr, 2fr),
+	inset: 5pt,
+	align: horizon,
+	[*Caso d'uso*], [*Visualizza report*],
+	[*Attore Primario*], [Gestore Cooperativa],
+	[*Attore Secondario*], [],
+	[*Descrizione*], [Viene mostrato l'ultimo report generato],
+	[*Pre-Condizioni*], [E' stato generato un report, il gestore ha effettuato il login],
+	[*Sequenza di eventi principale*], [
+		1. Il software individua il report più recente
+	],
+	[*Post-Condizioni*], [Il report viene mostrato a schermo],
+	[*Casi d'uso correlati*], [],
+	[*Sequenza di eventi alternativi*], [],
+)
+#table(
+	columns: (1fr, 2fr),
+	inset: 5pt,
+	align: horizon,
+	[*Caso d'uso*], [*Genera e invio fattura*],
+	[*Attore Primario*], [Tempo],
+	[*Attore Secondario*], [Sistema d'interscambio],
+	[*Descrizione*], [Vengono generate e inviate elettronicamente le fatture],
+	[*Pre-Condizioni*], [E' disponibile una connessione internet],
+	[*Sequenza di eventi principale*], [
+		1. Il software individua i prodotti da fatturare
+		2. Il software genera la fattura per ogni cliente
+		3. Il software invia automaticamente tutte le fatture generate
+	],
+	[*Post-Condizioni*], [Le fatture sono generare e inviate elettronicamente],
+	[*Casi d'uso correlati*], [],
+	[*Sequenza di eventi alternativi*], [],
+)
+#table(
+	columns: (1fr, 2fr),
+	inset: 5pt,
+	align: horizon,
+	[*Caso d'uso*], [*Visualizza spedizioni*],
+	[*Attore Primario*], [Fattorino],
+	[*Attore Secondario*], [],
+	[*Descrizione*], [Il fattorino visualizza le spedizioni che deve effettuare],
+	[*Pre-Condizioni*], [Il fattorino ha effettuato il login],
+	[*Sequenza di eventi principale*], [
+		1. Il fattorino sceglie di visualizzare le consegne che deve effettuare
+		2. Il software individua le spedizioni relative al fattorino
+		3. Il software mostra le spedizioni
+	],
+	[*Post-Condizioni*], [Il fattorino vede le spedizioni che deve effettuare],
+	[*Casi d'uso correlati*], [],
+	[*Sequenza di eventi alternativi*], [],
+)
+#table(
+	columns: (1fr, 2fr),
+	inset: 5pt,
+	align: horizon,
+	[*Caso d'uso*], [*Conferma consegna*],
+	[*Attore Primario*], [Fattorino],
+	[*Attore Secondario*], [Cliente],
+	[*Descrizione*], [Il fattorino conferma l'avvenuta consegna],
+	[*Pre-Condizioni*], [Il fattorino sta consegnando l'ordine, il fattorino ha effettuato il login],
+	[*Sequenza di eventi principale*], [
+		1. Il fattorino sta effettuando la consegna
+		2. Il fattorino indica che la consegna è stata effettuata
+	],
+	[*Post-Condizioni*], [L'ordine viene segnato come consegnato],
+	[*Casi d'uso correlati*], [],
+	[*Sequenza di eventi alternativi*], [],
+)
+/*
+#table(
+	columns: (1fr, 2fr),
+	inset: 5pt,
+	align: horizon,
 	[*Caso d'uso*], [**],
 	[*Attore Primario*], [],
 	[*Attore Secondario*], [],
@@ -289,4 +422,4 @@ in tale ambito è esclusa un interfaccia grafica non web, in quanto i fattorini 
 	[*Post-Condizioni*], [],
 	[*Casi d'uso correlati*], [],
 	[*Sequenza di eventi alternativi*], [],
-)
+)*/
