@@ -8,6 +8,13 @@ public class Impiegato extends Utente{
 	private boolean puoRegistrareImpiegati;
 	
 	
+	public Impiegato(String username, String password, boolean puoRegistrareClienti, boolean puoRegistrareImpiegato) {
+		this.username = username;
+		this.password = password;
+		this.puoRegistrareClienti = puoRegistrareClienti;
+		this.puoRegistrareImpiegati = puoRegistrareImpiegato;
+	}
+	
 	public String getNome() {
 		return nome;
 	}

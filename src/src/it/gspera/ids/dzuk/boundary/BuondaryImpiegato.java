@@ -17,6 +17,7 @@ public class BuondaryImpiegato {
 	
 	public BuondaryImpiegato(Impiegato i, Input in, PrintStream out, Logger log) {
 		this.impiegato = i;
+		this.in = in;
 		this.out = out;
 		this.log = log;
 	}
@@ -25,7 +26,7 @@ public class BuondaryImpiegato {
 		this.log.info("BoundaryImpiegato: Main");
 		
 		while(true) {
-			out.println("Benvenuto " + impiegato.getNome());
+			out.println("Benvenuto");
 			out.println("1) Registra prodotto");
 			out.println("2) Prepara ordine");
 			if (impiegato.puoRegistrareClienti()) {
@@ -82,7 +83,7 @@ public class BuondaryImpiegato {
 		String codice_fatturazione = in.nextLine("Inserire il codice univoco per la fatturazione (6 caratteri):", s -> s.length() == 6, "Codice non valido");
 		boolean ok = MainController.the().registraCliente(nome, indirizzo, email, codice_fatturazione);
 		if (!ok) {
-			log.error("ERRORE durante lòa registrazione del cliente");
+			log.error("ERRORE durante la registrazione del cliente");
 			log.error("E' possibile riprovare a registrare il cliente");
 		}
 	}

@@ -1,0 +1,190 @@
+@startuml
+package Entity {
+    class CategoriaProdotto {
+        string nome
+    }
+    abstract Utente {
+        string username
+        string password
+    }
+    class Cliente {
+        Tipo tipoCliente
+        string nome
+        string indirizzo
+        string email
+        string codice univoco fatturazione
+    }
+
+    class "Cliente.Builder" as ClienteBuilder {
+        + nuovo
+        + con Tipo
+        + con Nome
+        + con Indirizzo
+        + con Email
+        + con Codice Fatturazione
+        + con Username
+        + con Password
+        + costruisci
+    }
+    ClienteBuilder -- Cliente
+
+    class Impiegato {
+        string nome
+        bool può registrare clienti
+        bool può registrare impiegati
+    }
+    class Fattorino {}
+    class Fattura {
+        int codice
+    }
+    class Prodotto {
+        int codice
+        string descrizione
+        float prezzo al kg
+        float peso in kg
+        bool è stato venduto
+        bool è stato riportato
+        String pescatore
+    }
+
+    note top of Prodotto : Il Pescatore è stato incluso in Prodotto
+
+    Utente <-- Cliente
+    Utente <-- Impiegato
+    Utente -- Fattorino
+
+    Prodotto --o CategoriaProdotto : categoria
+    Prodotto --o Fattura : codice fattura
+
+    Cliente --o Fattura : categoria
+}
+
+package Boundary {
+    class "Boundary Background Scheduler" as BoundaryBackgroundScheduler {
+        + Schedula
+    }
+    class "Boundary Impiegato" as BuondaryImpiegato {
+        + Main
+    }
+    class "Boundary Gestore" as BoundaryGestore {
+        + Main
+    }
+    class "Boundary Fattorino" as BoundaryFattorino {
+        + Main
+    }
+    class "Login Boundary" as LoginBoundary {
+        + Main
+    }
+
+    BuondaryImpiegato *-- LoginBoundary
+    BoundaryGestore *-- LoginBoundary
+    BoundaryFattorino *-- LoginBoundary
+}
+
+package Controller {
+    class MainController {
+        + prodotti disponibili
+        + effettua login
+        + registra prodotto
+        + registra cliente
+        + genera report
+        + genera e invia fatture
+    }
+
+    class "MainController.Builder" as MainControllerBuilder {
+        nuovo
+		+ con Logger
+		+ con ProdottoDAO
+		+ con UtenteDAO
+		+ con ClienteDAO
+		+ con Fatture Manager
+		+ costruisci E Sostituisci
+    }
+    MainControllerBuilder -- MainController
+
+    note right of MainController: Singleton
+}
+
+package Utility {
+    interface "Fatture Manager" as FattureManager {
+    }
+    class "No Operation Fatture Manager" as NoOpFattureManager{
+    }
+    class "File Fatture Manager" as FileFattureManager {
+    }
+
+    class "Risultato<T>" as Risultato {
+        + ha avuto successo
+        + get Risultato
+        + get Errore
+        + come Optional
+    }
+
+    class ClienteBuilderException {}
+    enum "ClienteBuilderException.Tipo" as ClienteBuilderExceptionTipo {
+        Tipo Cliente NonSpecificato
+		Nome Vuoto
+		Username Vuoto
+		Password Vuota
+		Codice Fatturazione Non Specificato
+		Cliente Già Costruito
+    }
+    ClienteBuilderExceptionTipo *-- ClienteBuilderException
+    ClienteBuilderException -- ClienteBuilder
+
+    class MainControllerBuilderException {}
+    enum "MainControllerBuilderException.Tipo" as MainControllerBuilderExceptionTipo {
+		ProdottoDAO Non Definito
+		UtenteDAO Non Definito
+		MainController Gia Costruito
+		ClienteDAO Non Definito
+    }
+    MainControllerBuilderExceptionTipo *-- MainControllerBuilderException
+    MainControllerBuilderException -- MainControllerBuilder
+
+    NoOpFattureManager -- FattureManager
+    FileFattureManager --> FattureManager
+
+    class Input {
+        + next Int
+        + next Line
+        + next Long
+        + next Boolean
+        + next Date
+        + next Float
+    }
+
+    class None {}
+}
+
+package DAO {
+    interface "Cliente DAO" as ClienteDAO {
+    }
+    interface "Prodotto DAO" as ProdottoDAO {
+    }
+    interface "Utente DAO" as UtenteDAO {
+    }
+
+    class "SQL DAO Implementation" as SqlDaoImpl {
+    }
+    SqlDaoImpl --> ClienteDAO
+    SqlDaoImpl --> ProdottoDAO
+    SqlDaoImpl --> UtenteDAO
+}
+
+LoginBoundary -.-o MainController
+BoundaryBackgroundScheduler -.-o MainController
+BoundaryGestore -.-o MainController
+BoundaryFattorino -.-o MainController
+
+MainController --o FattureManager
+
+MainController ---o ClienteDAO
+MainController ---o ProdottoDAO
+MainController ---o UtenteDAO
+
+Cliente -- ClienteDAO
+Prodotto -- ProdottoDAO
+Utente -- UtenteDAO
+Fattura -- FattureManager
+@enduml

@@ -69,7 +69,7 @@ public class Cliente extends Utente {
 				throw new ClienteBuilderException(ClienteBuilderException.Tipo.ClienteGiaCostruito);
 			}
 			
-			if (cliente.tipo == null) {
+			if (cliente.tipoCliente == null) {
 				throw new ClienteBuilderException(ClienteBuilderException.Tipo.TipoClienteNonSpecificato);
 			}
 			if (cliente.nome == null || cliente.nome.length() == 0) {
@@ -91,11 +91,32 @@ public class Cliente extends Utente {
 	}
 	
 	public enum Tipo {
-		Pescheria,
-		Ristorante,
+		Pescheria(0),
+		Ristorante(1),;
+		
+		private int id;
+
+		private Tipo(int id) {
+			this.id = id;
+		}
+		
+		public static Tipo daInt(int id) {
+			switch(id) {
+			case 0:
+				return Pescheria;
+			case 1:
+				return Ristorante;
+			default:
+				return null;
+			}
+		}
+		
+		public int getID() {
+			return this.id;
+		}
 	}
 	
-	private Tipo tipoCliente; // Non ha un setter
+	private Cliente.Tipo tipoCliente;
 	private String nome;
 	private String indirizzo;
 	private String email;

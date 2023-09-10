@@ -1,5 +1,5 @@
 #set text(lang: "it")
-#set footnote(numbering: "i")
+#set footnote(numbering: "*")
 #set heading(numbering: "1.1")
 #set par(justify: true)
 #set page(
@@ -423,3 +423,65 @@ in tale ambito è esclusa un interfaccia grafica non web, in quanto i fattorini 
 	[*Casi d'uso correlati*], [],
 	[*Sequenza di eventi alternativi*], [],
 )*/
+
+==  Diagramma delle classi
+#image("classi.svg")
+=== revisione, con dettagli implementativi
+#image("classi-2.svg")
+
+== Caso d'uso
+Benchè il login non sia un caso d'uso effettivo è stato isolato dagli altri.
+=== Caso d'uso Login
+#image("login.svg")
+=== Caso d'uso Registrazione cliente
+#image("impiegato-registra-cliente.svg")
+
+== Stima dei costi
+#table(
+	columns: (1fr, 2fr, 2fr, 2fr),
+	inset: 5pt,
+	align: horizon,
+	[], [*Valore*], [*Peso*],
+	[*NILF*], [5 #footnote[Tabelle nel DB]], [Alto],
+	[*NEIF*], [5 #footnote[Fattura elettronica]], [Medio], 
+	[*NEI*], [10#footnote[Ingressi registrazione cliente, prodotto, impiegato]], [Basso], 
+	[*NEO*], [3#footnote[Report, Fattura, Consegne]], [Alto],
+	[*NEQ*], [3#footnote[Inventario, Consegne da effettuare, Report]], [Basso], 
+)
+
+=== Fattori correttivo
+#table(
+	columns: (2fr, 1fr),
+	inset: 5pt,
+	align: horizon,
+	[*Comunicazione dati*], [4],
+	[*Distribuzione elaborazione*], [1],
+	[*Prestazioni*], [2],
+	[*Utilizzo intensivo configurazione*], [0],
+	[*Frequenza delle transazione*], [2],
+	[*Inserimneto dati interattivo*], [2],
+	[*Efficenza per l'utente finale*], [4],
+	[*Aggiornamento interattivo*], [0],
+	[*Complessità elaborativa*], [1],
+	[*Riusabilità*], [0],
+	[*Facilità installazione*], [2],
+	[*Facilità gestione operativa*], [0],
+	[*Molteplicità di siti*], [4],
+	[*Facilità di modifica*], [4],
+	[], [26],
+)
+
+== Piano di test funzionale
+Usando il _category-partition_ testing testiamo _UtenteDAO_,
+per i testing vengono usati dei valori fittizzi che possono essere
+caricati sul database dal file _init_testing.sql_:
+#table(
+	columns: (1fr, 1fr, 1fr, 1fr, 1fr),
+	inset: 3pt,
+	align: horizon,
+	[*Identificativo*], [*Descrizione*], [*Ingresso*], [*Risultato atteso*], [*Post-Condizione*],
+	[TCD01], [Controlliamo che un cliente sia trovato all'interno del database e il nome non risulti libero], [nome: pescheria_esistente], [Già esistente], [Nessun effetto],
+	[TCD02], [Vedere TCD01], [nome: pescheria_NON_esistente], [Non esistente], [Nessun effetto],
+	[TCD03], [Controlliamo che la creazione di un cliente già esistente fallisca], [nome: pescheria_esistente], [Errore durante l'inserimento], [Nessun effetto],
+	[TCD04], [Controlliamo che l'inserimento di un cliente non esistente abbia successo], [nome: pescheria_NON_esistente], [Successo], [Viene creato il cliente],
+)

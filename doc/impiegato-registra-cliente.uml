@@ -1,0 +1,57 @@
+@startuml
+actor Impiegato
+boundary ImpiegatoBoundary
+control MainController
+database ClienteDAO
+
+title Registrazione Cliente
+
+== L'utente arriva da LoginBoundary ==
+ImpiegatoBoundary -> Impiegato : Selezionare l'operazione
+Impiegato -> ImpiegatoBoundary : Registrazione cliente
+
+loop Inserimento Nome
+    ImpiegatoBoundary -> Impiegato : Inserire nome
+    Impiegato -> ImpiegatoBoundary : nome
+    note over Impiegato, ImpiegatoBoundary : Controllo che il nome sia valido e disponibile
+    ImpiegatoBoundary -> MainController : Nome Cliente Disponibile(nome)
+    MainController -> ClienteDAO : Controlla Disponibilità Nome(nome)
+    ClienteDAO <- MainController : Risultato
+    MainController -> ImpiegatoBoundary : Ok o Errore
+end
+
+loop Inserimento Nome
+    ImpiegatoBoundary -> Impiegato : Inserire indirizzo
+    Impiegato -> ImpiegatoBoundary : indirizzo
+    note over Impiegato, ImpiegatoBoundary : Controllo che il indirizzo
+end
+
+ImpiegatoBoundary -> Impiegato : Inserire email
+Impiegato -> ImpiegatoBoundary : email
+
+loop Inserimento Codice fatturazione
+    ImpiegatoBoundary -> Impiegato : Inserire codice fatturazione
+    Impiegato -> ImpiegatoBoundary : codice fatturazione
+    note over Impiegato, ImpiegatoBoundary : Controllo che il codice fatturazione sia valido
+end
+
+ImpiegatoBoundary -> MainController : registra cliente (nome, indirizzo, email, codice fatturazione)
+MainController -> ClienteDAO : registra cliente(nome, indirizzo, email, codice fatturazione)
+
+create entity Cliente
+ClienteDAO -> Cliente
+activate Cliente
+Cliente -> ClienteDAO
+
+
+alt Successo
+    ClienteDAO -> MainController : Cliente creato
+    MainController -> ImpiegatoBoundary : Messaggio di successo
+    ImpiegatoBoundary -> Impiegato: Successo
+else Errore
+    ClienteDAO -> MainController : Errore
+    MainController -> ImpiegatoBoundary : Messaggio di errore
+    ImpiegatoBoundary -> Impiegato : Errore
+end
+
+@enduml 

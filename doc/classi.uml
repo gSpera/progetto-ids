@@ -1,0 +1,112 @@
+@startuml
+package Entity {
+    class CategoriaProdotto {
+        string nome
+    }
+    abstract Utente {
+        string username
+        string password
+    }
+    class Cliente {
+        Tipo tipoCliente
+        string nome
+        string indirizzo
+        string email
+        string codice univoco fatturazione
+    }
+    class Impiegato {
+        string nome
+        bool può registrare clienti
+        bool può registrare impiegati
+    }
+    class Fattorino {}
+    class Fattura {
+        int codice
+    }
+    class Prodotto {
+        int codice
+        string descrizione
+        float prezzo al kg
+        float peso in kg
+        bool è stato venduto
+        bool è stato riportato
+    }
+
+    class Pescatore {
+        string nome
+    }
+
+    Utente <-- Cliente
+    Utente <-- Impiegato
+    Utente <-- Fattorino
+
+    Prodotto --o CategoriaProdotto : categoria
+    Prodotto --o Fattura : codice fattura
+    Prodotto --o Pescatore : pescato da
+
+    Cliente --o Fattura : categoria
+}
+
+package Boundary {
+    class "Boundary Background Scheduler" as BoundaryBackgroundScheduler {
+        + Schedula
+    }
+    class "Boundary Impiegato" as BuondaryImpiegato {
+        + Main
+    }
+    class "Boundary Gestore" as BoundaryGestore {
+        + Main
+    }
+    class "Boundary Fattorino" as BoundaryFattorino {
+        + Main
+    }
+    class "Login Boundary" as LoginBoundary {
+        + Main
+    }
+
+    BuondaryImpiegato *-- LoginBoundary
+    BoundaryGestore *-- LoginBoundary
+    BoundaryFattorino *-- LoginBoundary
+}
+
+package Controller {
+    class MainController {
+        + prodotti disponibili
+        + effettua login
+        + registra prodotto
+        + registra cliente
+        + genera report
+        + genera e invia fatture
+    }
+}
+
+package Utility {
+    interface "Fatture Manager" as FattureManager {
+    }
+}
+
+package DAO {
+    interface "Cliente DAO" as ClienteDAO {
+    }
+    interface "Prodotto DAO" as ProdottoDAO {
+    }
+    interface "Utente DAO" as UtenteDAO {
+    }
+}
+
+LoginBoundary --o MainController
+BoundaryBackgroundScheduler --o MainController
+BoundaryGestore --o MainController
+BoundaryFattorino --o MainController
+
+MainController --o FattureManager
+
+MainController --o ClienteDAO
+MainController --o ProdottoDAO
+MainController --o UtenteDAO
+
+Cliente -- ClienteDAO
+Prodotto -- ProdottoDAO
+Utente -- UtenteDAO
+Fattura -- FattureManager
+@enduml

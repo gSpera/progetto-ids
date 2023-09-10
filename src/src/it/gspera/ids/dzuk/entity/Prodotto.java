@@ -1,7 +1,17 @@
 package it.gspera.ids.dzuk.entity;
 
 /***
- * Prodotto contiene tutte le informazioni di un prodotto
+ * Prodotto contiene tutte le informazioni di un prodotto.
+ * <p>
+ * Poichè non è effetivamente usato, si è scelto per fini pratici e prestazionali
+ * di non includere un riferimento alla <i>Fattura</i> relativa al <i>Prodotto</i>,
+ * nel caso questo attributo sia necessario si può passare per il <i>ProdottoDAO</i>,
+ * questo indica, anche, al programmatore, che ottenere la fattura potrebbe essere
+ * un operazione costosa, a titolo di esempio una connessione al database.
+ * </p>
+ * 
+ * @see it.gspera.ids.dzuk.entity.Fattura
+ * @see it.gspera.ids.dzuk.entity.ProdottoDAO
  */
 public class Prodotto {
 	private int codice;
@@ -9,20 +19,20 @@ public class Prodotto {
 	private String descrizione;
 	private float prezzoAlKg; // Per i prezzi non sarebbe l'ideale usare i float
 	private float pesoInKg; // Non è necessario creare un tipo specifico per il peso, anche se sarebbe una buona idea
+	private String pescatore; // Chi ha venduto il Prodotto alla cooperativa
 	
 	private boolean venduto; // True se è stato venduto
 	private boolean riportato; // True se è in un report
-	private boolean fatturato; // True se è stato fatturato
 	
-	public Prodotto(int codice, CategoriaProdotto categoria, String descrizione, float prezzoAlKg, float pesoInKg, boolean venduto, boolean riportato, boolean fatturato) {
+	public Prodotto(int codice, CategoriaProdotto categoria, String descrizione, float prezzoAlKg, float pesoInKg, String pescatore, boolean venduto, boolean riportato) {
 		this.codice = codice;
 		this.categoria = categoria;
 		this.descrizione = descrizione;
 		this.prezzoAlKg = prezzoAlKg;
 		this.pesoInKg = pesoInKg;
+		this.pescatore = pescatore;
 		this.venduto = venduto;
 		this.riportato = riportato;
-		this.fatturato = fatturato;
 	}
 
 	public int getCodice() {

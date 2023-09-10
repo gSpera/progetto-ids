@@ -193,6 +193,9 @@ public class MainController {
 		return true;
 	}
 
+	public boolean nomeClienteDisponibile(String nome) {
+		return this.clienteDao.controllaDisponibilitaNomeCliente(nome);
+	}
 	public boolean registraCliente(String nome, String indirizzo, String email, String codice_fatturazione) {
 		try {
 			boolean nomeDisponibile = this.clienteDao.controllaDisponibilitaNomeCliente(nome);

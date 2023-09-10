@@ -1,0 +1,25 @@
+@startuml
+actor Utente
+boundary LoginBoundary
+entity MainController
+database UtenteDAO
+
+title Login
+
+Utente -> LoginBoundary : Connessione al software
+LoginBoundary -> Utente : Inserire credenziali o selezionare di visualizzare l'inventario
+
+Utente -> LoginBoundary : Invio username
+Utente -> LoginBoundary : Invio password
+
+LoginBoundary -> MainController : Effettua Login (username, password)
+alt Login effettuato con successo
+    MainController -> LoginBoundary : Successo
+    LoginBoundary -> Utente : Login Effettuato con successo
+    == Connessione al corretto Boundary ==
+else Errore nel login
+    MainController -> LoginBoundary : Errore
+    LoginBoundary -> Utente : Impossibile effettuare il login, controllare le credenziali
+    == Reinserimento credenziali ==
+end
+@enduml

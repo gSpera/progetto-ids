@@ -40,12 +40,14 @@ public class LoginBoundary {
 			Optional<Utente> utente = MainController.the().effettuaLogin(username, password);
 			
 			if (utente.isEmpty()) {
-				out.print("Impossibile loggare, controlla che le credenziali siano corrette");
+				out.println("Impossibile loggare, controlla che le credenziali siano corrette");
 				continue;
 			}
 			
 			if (utente.get() instanceof Impiegato) {
-				new BuondaryImpiegato((Impiegato) utente.get(), in, out, log);
+				new BuondaryImpiegato((Impiegato) utente.get(), in, out, log).Main();
+			} else {
+				out.println("Utente non implementato");
 			}
 		}
 	}

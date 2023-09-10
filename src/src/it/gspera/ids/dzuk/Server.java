@@ -8,6 +8,8 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -16,7 +18,10 @@ import org.apache.logging.log4j.Logger;
 
 import it.gspera.ids.dzuk.boundary.LoginBoundary;
 import it.gspera.ids.dzuk.controller.MainController;
+import it.gspera.ids.dzuk.dao.SqlDaoImpl;
+import it.gspera.ids.dzuk.utility.FattureManager;
 import it.gspera.ids.dzuk.utility.MainControllerBuilderException;
+import it.gspera.ids.dzuk.utility.NoOpFattureManagerImpl;
 
 /**
  * Il server ascolta per nuove connessioni e ne effettua il login
@@ -49,9 +54,23 @@ public class Server extends Thread{
 	public static void exec(String[] args) throws IOException, MainControllerBuilderException {
 		ServerSocket server = new ServerSocket(Constants.SERVER_PORT);
 		Random random = new Random();
+		SqlDaoImpl dao = null;
+		FattureManager fattureManager = new NoOpFattureManagerImpl();
+		
+		try {
+			dao = new SqlDaoImpl(Constants.DATABASE_URL, LogManager.getLogger("SqlDao"));
+		} catch (Exception e) {
+			System.err.println("Impossibile creare il DAO:" + e.toString());
+			e.printStackTrace();
+			System.exit(1);
+		}
 		
 		new MainController.Builder()
 			.conLogger(LogManager.getLogger("MainController"))
+			.conProdottoDAO(dao)
+			.conClienteDAO(dao)
+			.conUtenteDAO(dao)
+			.conFattureManager(fattureManager)
 			.costruisciESostituisci();
 		
 		System.out.println("In attesa di una connessione");

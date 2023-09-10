@@ -1,6 +1,8 @@
 package it.gspera.ids.dzuk.utility;
 
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * <i>Risultato<i> è un monoide presente in molti linguaggi, spesso come Result, Either, o altri nomi.
@@ -54,5 +56,25 @@ public class Risultato<T> {
 	public Optional<T> comeOptional() {
 		// Ok, ora sto esagerando, lo sto facendo tanto per
 		return Optional.ofNullable(t);
+	}
+	
+	/**
+	 * <i>bind</i> è un piccolo metodo che implementa la monade,
+	 * è possibile accedere tramite una funzione <i>p</i>: T -> S al valore di T
+	 * e convertirlo in un valore di S(che potrebbe essere T stesso).
+	 * Nel caso in cui <i>Risultato</i> non contenga un valore ma un messaggio di errore
+	 * non viene richiamata la funzione <i>p</i>, invece viene creato un Risultato<S> con l'errore
+	 * 
+	 * @param p una funzione dal tipo T al tipo S
+	 * @return Risultato<S> con valore p(risultato) se è presente un risultato, altrimenti con il messaggio di errore
+	 */
+	public <S> Risultato<S> bind(Function<T, S> p) {
+		if (!this.haAvutoSuccesso()) {
+			return new Risultato<S>(this.getErrore());
+		}
+		
+		S s = p.apply(this.getRisultato());
+		
+		return new Risultato<S>(s);
 	}
 }
