@@ -9,7 +9,7 @@ import it.gspera.ids.dzuk.utility.ClienteBuilderException;
  * @author Giovanni Spera
  * @since  1.0
  */
-public class Cliente {
+public class Cliente extends Utente {
 	/***
 	 * Builder costruisce nuove instanze di <i>Cliente</i>.
 	 * Un Builder appena costruito può essere già usato per la costruzione tramite i metodi <i>Builder#con*</i>.
@@ -18,7 +18,7 @@ public class Cliente {
 	 * 
 	 * @see it.gspera.ids.dzuk.entity.Cliente
 	 */
-	public class Builder {
+	public static class Builder {
 		// Possiamo accedere agli attributi private
 		private Cliente cliente;
 		
@@ -31,7 +31,7 @@ public class Cliente {
 		}
 		
 		public Builder conTipo(Tipo tipo) {
-			cliente.tipo = tipo;
+			cliente.tipoCliente = tipo;
 			return this;
 		}
 		
@@ -95,18 +95,15 @@ public class Cliente {
 		Ristorante,
 	}
 	
-	private Tipo tipo; // Non ha un setter
+	private Tipo tipoCliente; // Non ha un setter
 	private String nome;
 	private String indirizzo;
 	private String email;
 	
-	private String username;  // Login, non ha un setter
-	private String password;
-	
 	private String codice_univoco_fatturazione; // Fatturazione Elettronica
 
-	public Tipo getTipo() {
-		return tipo;
+	public Tipo getTipoCliente() {
+		return tipoCliente;
 	}
 
 	public String getNome() {
