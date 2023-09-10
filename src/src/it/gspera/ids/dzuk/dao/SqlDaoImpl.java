@@ -85,7 +85,7 @@ public class SqlDaoImpl implements ClienteDAO, ProdottoDAO, UtenteDAO {
 			return null;
 		}
 		
-		return null;
+		return risultato;
 	}
 
 	@Override

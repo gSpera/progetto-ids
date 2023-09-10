@@ -10,12 +10,19 @@ public class Prodotto {
 	private float prezzoAlKg; // Per i prezzi non sarebbe l'ideale usare i float
 	private float pesoInKg; // Non è necessario creare un tipo specifico per il peso, anche se sarebbe una buona idea
 	
-	public Prodotto(int codice, CategoriaProdotto categoria, String descrizione, float prezzoAlKg, float pesoInKg) {
+	private boolean venduto; // True se è stato venduto
+	private boolean riportato; // True se è in un report
+	private boolean fatturato; // True se è stato fatturato
+	
+	public Prodotto(int codice, CategoriaProdotto categoria, String descrizione, float prezzoAlKg, float pesoInKg, boolean venduto, boolean riportato, boolean fatturato) {
 		this.codice = codice;
 		this.categoria = categoria;
 		this.descrizione = descrizione;
 		this.prezzoAlKg = prezzoAlKg;
 		this.pesoInKg = pesoInKg;
+		this.venduto = venduto;
+		this.riportato = riportato;
+		this.fatturato = fatturato;
 	}
 
 	public int getCodice() {
