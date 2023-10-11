@@ -22,6 +22,8 @@
 #let classeAttore(x) = box(fill: blue, inset: 1pt)[#x]
 #let funzionalita(x) = box(fill: red, inset: 1pt)[#x]
 
+#outline(title: "Indice")
+
 = Analisi e specifica dei requisiti
 == Nomi-verbi
 Si vuole realizzare un software per una cooperativa di pescatori. 
