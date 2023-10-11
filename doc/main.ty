@@ -16,11 +16,11 @@
     ])
 ]))
 
-#let attore(x) = box(fill: yellow, inset: 1pt)[#x]
-#let classe(x) = box(fill: purple, inset: 1pt)[#x]
+#let attore(x) = box(fill: red, inset: 1pt)[#x]
+#let classe(x) = box(fill: blue, inset: 1pt)[#x]
 #let attributo(x) = box(fill: green, inset: 1pt)[#x]
-#let classeAttore(x) = box(fill: blue, inset: 1pt)[#x]
-#let funzionalita(x) = box(fill: red, inset: 1pt)[#x]
+#let classeAttore(x) = box(fill: purple, inset: 1pt)[#x]
+#let funzionalita(x) = box(fill: yellow, inset: 1pt)[#x]
 
 #outline(title: "Indice")
 
@@ -87,70 +87,62 @@ in tale ambito è esclusa un interfaccia grafica non web, in quanto i fattorini 
 
 == Revisione Requisiti
 1. Un cliente è definito da un tipo(pescheria o ristante), un indirizzo, indirizzo e-mail, un username e una password (usati per il login) e dal _codice univoco_(necessario per la fatturazione).
-+ Alcuni impiegati possono registrare nuovi clienti, nuovi impiegati e/o nuovi fattorini nel software.
 + Impiegati e fattorini sono definiti da un username _univoco_ ed hanno un nome e una password.
 + I pescatori non hanno accesso al software.
-5. Il software tiene traccia dei pescatori e di quali prodotti hanno fornito.
-+ E' possibile, tramite al software, visualizzare i prodotti disponibili.
-+ I clienti possono, dopo aver effettuato il login, creare un nuovo ordine
++ Il software deve tenere traccia dei pescatori e di quali prodotti hanno fornito.
+5. Deve essere possibile visualizzare i prodotti disponibili.
++ I clienti possono creare un nuovo ordine
++ I nuovi ordini vengono inviati via mail alla cooperativa
++ Il gestore della cooperativa può registrare nuovi clienti.
 + Gli impiegati si occupano della preparazione degli ordini e della registrazione dei prodotti.
-+ La preparazione degli ordini e la registrazione dei prodotti devono essere eseguite ripetutamente e velocemente, difficilmente si passa da un attività ad un altra.
++ La preparazione degli ordini e la registrazione dei prodotti devono essere eseguite ripetutamente e velocemente.
 10. Un impiegato non può iniziare la preparazione di un ordine già in preparazione da un altro impiegato.
-+ Ogni lunedì mattina viene creato un nuovo report, un report può essere generato anche manualmente.
++ Il software ogni lunedì mattina crea un nuovo report, un report può essere generato anche manualmente.
 + Un report è una lista _ordinata per cliente_ dei prodotti venduti.
 + Un report contiene il totale del venduto, sia singolarmente per cliente sia totale.
-+ Ogni lunedì mattina viene creata una fattura per ogni cliente.
++ Il software ogni lunedì mattina crea una fattura per ogni cliente.
 15. Ogni fattura è specifica per un cliente e contiene una lista di prodotti venduti con il relativo costo, inoltre è presente il costo totale.
 + I prodotti possono essere fatturati una sola volta.
-+ Le fatture generate automaticamente dal software vengono inviate automaticamente elettronicamente tramite il sistema di interscambio..
++ Le fatture generate automaticamente dal software e vengono salvate per un invio futuro
 + I fattorini possono visuallizare le proprie spedizioni.
 + I fattorini possono indicare come _consegnato_ qualsiasi ordine.
-+ Ciascun ordine viene assegnato ad uno, ed un solo, fattorino
+20. Ciascun ordine viene assegnato ad uno, ed un solo, fattorino
++ Tutti gli ordini partono da una sola sede
 
 == Glossario
 #table(
-	columns: (1fr, 1fr, 1fr),
+	columns: (1fr, 1fr, 0pt),
 	inset: 5pt,
 	align: horizon,
-	[*Termine*], [*Descrizione*], [*Sinonimi*],
+	[*Termine*], [*Descrizione*], [], // [*Sinonimi*],
 	[Prodotto], [Un pesce, mollusco, _etc..._, qualsiasi cosa possa essere pescato e venduto], [],
 	[Impiegato], [Dipendente della cooperativa, sono esclusi pescatori e dipendente di altre aziende(pescherie e ristoranti)], [],
 	[Cliente], [Una pescheria o un ristorante registrati al software], [],
+	[Report], [Una lista, ordinata per cliente, dei prodotti venduti. E' presente il ricavato, sia per ogni cliente, sia il ricavato totale], [],
+	[Fattura], [Documento contenente tutti gli acquisti effettuati da un singolo cliente nel corso della settimana. Contiene il costo dei singoli prodotti e il costo totale], [],
 )
 
 == Classificazione dei requisiti
 === Requisiti funzionali
 #table(
-	columns: (1fr, 1fr, 1fr),
+	columns: (2fr, 7fr, 1fr),
 	inset: 3pt,
 	align: horizon,
 	[*ID*], [*Requisito*], [*Origine*],
-	[RF01], [Alcuni impiegati possono registrare nuovi clienti], [2],
-	[RF02], [Alcuni impiegati possono registrare nuovi impiegati], [2],
-	[RF03], [Chiunque può visualizzare i prodotti disponibili all'acquisto], [6],
-	[RF04], [Ciascun cliente può usare il software per effettuare un ordine], [7],
-	[RF05], [Ciascun impiegato può prepare un ordine], [8],
-	[RF06], [Ciascun impiegato può registrare un nuovo prodotto], [8],
-	[RF07], [La preparazione di più ordini in sequenza deve essere rapido], [9],
-	[RF08], [La registrazione di nuovi prodotti in sequenza deve essere rapida], [9],
-	[RF09], [Non deve essere possibile iniziare la preparazione di un ordine già in preparazione da parte di un altro impiegato], [10],
-	[RF10], [Ogni lunedì mattina deve essere generato un report], [11],
-	[RF11], [Il report può essere generato anche tramite richiesta manuale], [11],
-	[RF12], [Il report è ordinato per cliente], [12],
-	[RF13], [Il report contiene tutti i prodotti venduti con il relativo costo], [12],
-	[RF14], [Il report contiene il costo totale dei prodotti venduti per ogni cliente], [12],
-	[RF15], [Il report contiene il costo totale dei prodotti venduti], [12],
-
-	[RF16], [Ogni lunedì mattina deve essere generato una fattura per ogni cliente], [14],
-	[RF17], [Ciascuna fattura è collegata ad un solo cliente], [15],
-	[RF18], [Ciascuna fattura deve riportare tutti i prodotti che copre], [15],
-	[RF19], [Ciascuna fattura deve riportare il costo di ogni prodotto che copra], [15],
-	[RF20], [Ciascuna fattura deve riportare il costo totale], [15],
-	[RF21], [Ciascun prodotto può essere presente in una sola fattura], [16],
-	[RF22], [Ciascuna fattura deve essere inviata automaticamente al sistema di interscambio dell'agenzia delle entrate], [17],
-	[RF23], [Ciascun ordine viene assegnato a un fattorino], [20],
-	[RF24], [I fattorini possono visualizzare le proprie spedizioni], [18],
-	[RF25], [Ciascun fattorino può indicare come consegnato qualsiasi ordine], [19],
+	[RF03], [Il sistema deve permettere a chiunque di visualizzare i prodotti disponibili all'acquisto], [6],
+	[RF04], [Il sistema deve permettere ai clienti la funzionalità di effettuare un' ordine], [7],
+	[RF05], [Il sistema deve permettere agli impiegati di prepare un ordine], [8],
+	[RF06], [Il sistema deve permettere agli impiegati di registrare un nuovo prodotto], [8],
+	[RFXX], [Il sistema deve permettere al gestore della cooperativa di registrare nuovi clienti], [X],
+	[RF07], [Il sistema dever permettere l'inserimento di più ordini in sequenza in modo agevole], [9],
+	[RF07], [Il sistema dever permettere l'inserimento di più prodotti in sequenza in modo agevole], [9],
+	[RF09], [Il sistema deve impedire a un impegato di iniziare la preparazione di un ordine già in preparazione da un altro impiegato], [10],
+	[RF10], [Il sistema deve generare un report ogni lunedì mattina], [11],
+	[RF11], [Il sistema deve permettere al solo gestore della cooperativa di generare il report manualmente], [11],
+	[RF16], [Il sistema deve generare le fatture automaticamente ogni lunedì mattina], [14],
+	[RF23], [Il sistema deve assegnare ciascun ordine a un fattorino], [20],
+	[RF24], [Il sistema deve permettere ai fattorini di visualizzare le proprie spedizioni], [18],
+	[RF25], [Il sistema deve permettere ai fattorini di indiciare come consegnato un ordine a loro assegnato], [19],
 )
 === Requisiti sui dati
 #table(
@@ -169,6 +161,8 @@ in tale ambito è esclusa un interfaccia grafica non web, in quanto i fattorini 
 	[RF09], [Il software deve tenere traccia dei prodotti venduti e del loro prezzo], [12],
 	[RF10], [Per ogni prodotto venduto il software deve tenere traccia del cliente a cui è stato venduto], [12],
 	[RF11], [Il software deve tenere traccia se un prodotto è stato già fatturato], [16],
+
+	[RF21], [Ciascun prodotto può essere presente in una sola fattura], [16],
 )
 
 === Vincoli e altri requisiti
@@ -364,14 +358,14 @@ in tale ambito è esclusa un interfaccia grafica non web, in quanto i fattorini 
 	[*Caso d'uso*], [*Genera e invio fattura*],
 	[*Attore Primario*], [Tempo],
 	[*Attore Secondario*], [Sistema d'interscambio],
-	[*Descrizione*], [Vengono generate e inviate elettronicamente le fatture],
+	[*Descrizione*], [Vengono generate e salvate],
 	[*Pre-Condizioni*], [E' disponibile una connessione internet],
 	[*Sequenza di eventi principale*], [
 		1. Il software individua i prodotti da fatturare
 		2. Il software genera la fattura per ogni cliente
 		3. Il software invia automaticamente tutte le fatture generate
 	],
-	[*Post-Condizioni*], [Le fatture sono generare e inviate elettronicamente],
+	[*Post-Condizioni*], [Le fatture sono generare e salvate],
 	[*Casi d'uso correlati*], [],
 	[*Sequenza di eventi alternativi*], [],
 )
@@ -445,7 +439,7 @@ Benchè il login non sia un caso d'uso effettivo è stato isolato dagli altri.
 	align: horizon,
 	[], [*Valore*], [*Peso*],
 	[*NILF*], [5 #footnote[Tabelle nel DB]], [Alto],
-	[*NEIF*], [5 #footnote[Fattura elettronica]], [Medio], 
+	[*NEIF*], [5 #footnote[Fattura]], [Medio], 
 	[*NEI*], [10#footnote[Ingressi registrazione cliente, prodotto, impiegato]], [Basso], 
 	[*NEO*], [3#footnote[Report, Fattura, Consegne]], [Alto],
 	[*NEQ*], [3#footnote[Inventario, Consegne da effettuare, Report]], [Basso], 
