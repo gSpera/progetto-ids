@@ -17,6 +17,7 @@ import it.gspera.ids.dzuk.entity.Cliente;
 import it.gspera.ids.dzuk.entity.Fattorino;
 import it.gspera.ids.dzuk.entity.Fattura;
 import it.gspera.ids.dzuk.entity.Impiegato;
+import it.gspera.ids.dzuk.entity.Ordine;
 import it.gspera.ids.dzuk.entity.Prodotto;
 import it.gspera.ids.dzuk.entity.Utente;
 import it.gspera.ids.dzuk.utility.ClienteBuilderException;
@@ -121,7 +122,7 @@ public class SqlDaoImpl implements ClienteDAO, ProdottoDAO, UtenteDAO {
 			String password = rs.getString("password");
 			boolean puoRegistrareClienti = rs.getBoolean("puoRegistrareClienti");
 			boolean puoRegistrareImpiegati = rs.getBoolean("puoRegistrareImpiegati");
-			return new Risultato<Impiegato>(new Impiegato(username, password, puoRegistrareClienti, puoRegistrareImpiegati));
+			return new Risultato<Impiegato>(new Impiegato(username, password, username));
 		}catch(SQLException e) {
 			log.error("Impossibile eseguire le query: "+ e.toString());
 			e.printStackTrace();
@@ -191,7 +192,7 @@ public class SqlDaoImpl implements ClienteDAO, ProdottoDAO, UtenteDAO {
 			float prezzoAlKg, float pesoInKg) {
 		try {
 			PreparedStatement stmt = conn.prepareStatement("INSERT INTO prodotto VALUES (?, ?, ?, ?);");
-			stmt.setString(1, categoria.toString());
+			stmt.setInt(1, categoria.getCodice());
 			stmt.setString(2, descrizione);
 			stmt.setFloat(3, prezzoAlKg);
 			stmt.setFloat(4, pesoInKg);
@@ -200,7 +201,7 @@ public class SqlDaoImpl implements ClienteDAO, ProdottoDAO, UtenteDAO {
 			if (!ok) {
 				return new Risultato<Prodotto>("Errore durante la query");
 			}
-			return new Risultato<Prodotto>(new Prodotto(-1, categoria, descrizione, pesoInKg, pesoInKg, descrizione, false, false));
+			return new Risultato<Prodotto>(new Prodotto(-1, categoria, descrizione, pesoInKg, descrizione));
 		} catch (SQLException e) {
 			log.error("Impossibile eseguire le query: "+ e.toString());
 			e.printStackTrace();
@@ -252,6 +253,24 @@ public class SqlDaoImpl implements ClienteDAO, ProdottoDAO, UtenteDAO {
 
 	@Override
 	public Risultato<Fattura> checkEStatoFatturato(Prodotto p) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public CategoriaProdotto categoriaDaDescrizione(String categoriaString) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Ordine> ordiniPerfattorino(Fattorino fattorino) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object consegnaOrdine(Ordine o) {
 		// TODO Auto-generated method stub
 		return null;
 	}

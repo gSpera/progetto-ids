@@ -1,8 +1,25 @@
 @startuml
 package Entity {
     class CategoriaProdotto {
-        string nome
+        int codice
+        PossibiliCategorie categoria
+        TipoCategoriaProdotto tipo
+        string descrizione
+        float prezzo al kg
     }
+    enum PossibiliCategorie {
+        Pesci
+        Crostacei
+        Molluschi
+    }
+    enum TipoCategoriaProdotto {
+        Verace
+        Allevamento
+        Congelato
+    }
+    CategoriaProdotto --- PossibiliCategorie
+    CategoriaProdotto --- TipoCategoriaProdotto
+
     abstract Utente {
         string username
         string password
@@ -12,7 +29,6 @@ package Entity {
         string nome
         string indirizzo
         string email
-        string codice univoco fatturazione
     }
 
     class "Cliente.Builder" as ClienteBuilder {
@@ -30,55 +46,92 @@ package Entity {
 
     class Impiegato {
         string nome
-        bool può registrare clienti
-        bool può registrare impiegati
     }
     class Fattorino {}
     class Fattura {
         int codice
+        Cliente cliente
+        List<Prodotto> prodotti
     }
     class Prodotto {
         int codice
         string descrizione
-        float prezzo al kg
+        CategoriaProdotto categoria
         float peso in kg
-        bool è stato venduto
-        bool è stato riportato
         String pescatore
+        Prodotto.Stato stato
     }
 
-    note top of Prodotto : Il Pescatore è stato incluso in Prodotto
+    enum "Prodotto.Stato" as prodotto_stato {
+        Creato
+        Venduto
+        In Preparazione
+        Preparato
+        In spedizione
+        Reportato
+        Fatturato
+        ReportatoEFatturato
+    }
+
+    class Ordine {
+        int codice
+        List<Prodotto> prodotti
+        Fattorino fattorino
+    }
+
+    note top of Prodotto : Il Pescatore è incluso in Prodotto
 
     Utente <-- Cliente
     Utente <-- Impiegato
-    Utente -- Fattorino
+    Fattorino --> Utente
 
-    Prodotto --o CategoriaProdotto : categoria
-    Prodotto --o Fattura : codice fattura
+    Prodotto --o CategoriaProdotto
+    Prodotto --o Fattura
 
-    Cliente --o Fattura : categoria
+    Cliente --o Fattura
+
+    Ordine -- Prodotto
+    Ordine -- Fattorino
 }
 
 package Boundary {
     class "Boundary Background Scheduler" as BoundaryBackgroundScheduler {
-        + Schedula
+        + schedula
+        + genera report
+        + genera e invia fattura
     }
     class "Boundary Impiegato" as BuondaryImpiegato {
-        + Main
+        + main
+        + registra prodotto
+        + prepara ordine
     }
     class "Boundary Gestore" as BoundaryGestore {
-        + Main
+        + main
+        + registra cliente
+        + registra impiegato
+        + genera report
+        + visualizza report
+        + registra nuova categoria prodotto
     }
     class "Boundary Fattorino" as BoundaryFattorino {
-        + Main
+        + main
+        + visualizza spedizioni
+        + conferma consegna
+    }
+    class "Boundary Cliente" as BoundaryCliente {
+        + main
+        + visualizza inventario
+        + effettua ordine
     }
     class "Login Boundary" as LoginBoundary {
-        + Main
+        + effettua login
+        + mostra inventario
     }
 
     BuondaryImpiegato *-- LoginBoundary
     BoundaryGestore *-- LoginBoundary
     BoundaryFattorino *-- LoginBoundary
+    BoundaryCliente *-- LoginBoundary
 }
 
 package Controller {
@@ -97,7 +150,6 @@ package Controller {
 		+ con ProdottoDAO
 		+ con UtenteDAO
 		+ con ClienteDAO
-		+ con Fatture Manager
 		+ costruisci E Sostituisci
     }
     MainControllerBuilder -- MainController
@@ -106,11 +158,11 @@ package Controller {
 }
 
 package Utility {
-    interface "Fatture Manager" as FattureManager {
+    interface "EMail Server" as email{
+        + invia fattura
     }
-    class "No Operation Fatture Manager" as NoOpFattureManager{
-    }
-    class "File Fatture Manager" as FileFattureManager {
+
+    class "No Op EMail Server" as noop_email {
     }
 
     class "Risultato<T>" as Risultato {
@@ -142,8 +194,7 @@ package Utility {
     MainControllerBuilderExceptionTipo *-- MainControllerBuilderException
     MainControllerBuilderException -- MainControllerBuilder
 
-    NoOpFattureManager -- FattureManager
-    FileFattureManager --> FattureManager
+    noop_email --> email
 
     class Input {
         + next Int
@@ -177,8 +228,6 @@ BoundaryBackgroundScheduler -.-o MainController
 BoundaryGestore -.-o MainController
 BoundaryFattorino -.-o MainController
 
-MainController --o FattureManager
-
 MainController ---o ClienteDAO
 MainController ---o ProdottoDAO
 MainController ---o UtenteDAO
@@ -186,5 +235,4 @@ MainController ---o UtenteDAO
 Cliente -- ClienteDAO
 Prodotto -- ProdottoDAO
 Utente -- UtenteDAO
-Fattura -- FattureManager
 @enduml

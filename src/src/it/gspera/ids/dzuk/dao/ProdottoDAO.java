@@ -4,7 +4,9 @@ import java.util.List;
 
 import it.gspera.ids.dzuk.entity.CategoriaProdotto;
 import it.gspera.ids.dzuk.entity.Cliente;
+import it.gspera.ids.dzuk.entity.Fattorino;
 import it.gspera.ids.dzuk.entity.Fattura;
+import it.gspera.ids.dzuk.entity.Ordine;
 import it.gspera.ids.dzuk.entity.Prodotto;
 import it.gspera.ids.dzuk.utility.Risultato;
 
@@ -29,4 +31,10 @@ public interface ProdottoDAO {
 	 * @return Risultato<Fattura> se il prodotto è stato fatturato o un messaggio di errore
 	 */
 	public Risultato<Fattura> checkEStatoFatturato(Prodotto p);
+
+	public CategoriaProdotto categoriaDaDescrizione(String categoriaString);
+
+	public List<Ordine> ordiniPerfattorino(Fattorino fattorino);
+
+	public Object consegnaOrdine(Ordine o);
 }

@@ -23,14 +23,4 @@ public class Fattura {
 		this.cliente = cliente;
 		this.prodotti = prodotti;
 	}
-	
-	public String toXML() throws ParserConfigurationException {
-		// Si ringrazia https://www.fatturapa.gov.it/it/lafatturapa/esempi/
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		DocumentBuilder db = dbf.newDocumentBuilder();
-		Document dom = db.newDocument();
-		Element root = dom.createElement("p:FatturaElettronica");
-		dom.createElement("FatturaElettronicaHeader");
-		return null;
-	}
 }

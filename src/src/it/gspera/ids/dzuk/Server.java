@@ -19,9 +19,7 @@ import org.apache.logging.log4j.Logger;
 import it.gspera.ids.dzuk.boundary.LoginBoundary;
 import it.gspera.ids.dzuk.controller.MainController;
 import it.gspera.ids.dzuk.dao.SqlDaoImpl;
-import it.gspera.ids.dzuk.utility.FattureManager;
 import it.gspera.ids.dzuk.utility.MainControllerBuilderException;
-import it.gspera.ids.dzuk.utility.NoOpFattureManagerImpl;
 
 /**
  * Il server ascolta per nuove connessioni e ne effettua il login
@@ -55,7 +53,6 @@ public class Server extends Thread{
 		ServerSocket server = new ServerSocket(Constants.SERVER_PORT);
 		Random random = new Random();
 		SqlDaoImpl dao = null;
-		FattureManager fattureManager = new NoOpFattureManagerImpl();
 		
 		try {
 			dao = new SqlDaoImpl(Constants.DATABASE_URL, LogManager.getLogger("SqlDao"));
@@ -70,7 +67,6 @@ public class Server extends Thread{
 			.conProdottoDAO(dao)
 			.conClienteDAO(dao)
 			.conUtenteDAO(dao)
-			.conFattureManager(fattureManager)
 			.costruisciESostituisci();
 		
 		System.out.println("In attesa di una connessione");

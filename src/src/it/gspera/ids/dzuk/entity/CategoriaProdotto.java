@@ -1,26 +1,80 @@
 package it.gspera.ids.dzuk.entity;
 
-/***
- * <i>CategoriaProdotto</i> rappresenta la categoria di un prodotto,
- * non è un enum per poter aggiungere facilmente nuove categorie
- * 
- * E' possibile creare nuove <i>CategoriaProdotto</i> liberamente,
- * due <i>CategoriaProdotto</i> con lo stesso nome sono equivalenti tra di loro.
- * Questa scelta aumenta il consumo di memoria[1] ma semplifica l'implementazione,
- * inoltre difficilmente altre classi creeranno nuove <i>CategoriaProdotto</i>
- * 
- * [1]: Il consumo di memoria sarebbe in ogni caso da misurare, l'utilizzo di un Manager
- * richiederebbe di avere una struttura dati dove registrare tutte le <i>CategoriaProdotto</i>
- * che a sua volta occuperebbe memoria. Come sempre non si parla senza benchmark.
- */
 public class CategoriaProdotto {
-	private String nome;
+	public enum PossibiliCategorie {
+		Pesci(1),
+		Crostacei(2),
+		Molluschi(3),
+		;
+		
+		public final int id;
+		private PossibiliCategorie(int id) {
+			this.id = id;
+		}
+	};
+	public enum TipoCategoriaProdotto {
+		Verace(1),
+		Allevamento(2),
+		Congelato(3),
+		;
+		
+		public final int id;
+		private TipoCategoriaProdotto(int id) {
+			this.id = id;
+		}
+	};
 	
-	public CategoriaProdotto(String nome) {
-		this.nome = nome;
+	private int codice;
+	private String descrizione;
+	private PossibiliCategorie categoria;
+	private TipoCategoriaProdotto tipo;
+	private float prezzoAlKg;
+	
+	public CategoriaProdotto(int codice, String descrizione, PossibiliCategorie categoria, TipoCategoriaProdotto tipo, float prezzoAlKg) {
+		this.codice = codice;
+		this.descrizione = descrizione;
+		this.categoria = categoria;
+		this.tipo = tipo;
+		this.prezzoAlKg = prezzoAlKg;
 	}
 	
-	public boolean equals(CategoriaProdotto other) {
-		return this.nome.equals(other.nome);
+	public int getCodice() {
+		return codice;
+	}
+
+	public void setCodice(int codice) {
+		this.codice = codice;
+	}
+
+	public String getDescrizione() {
+		return descrizione;
+	}
+
+	public void setDescrizione(String descrizione) {
+		this.descrizione = descrizione;
+	}
+
+	public PossibiliCategorie getCategoria() {
+		return categoria;
+	}
+
+	public void setCategoria(PossibiliCategorie categoria) {
+		this.categoria = categoria;
+	}
+
+	public TipoCategoriaProdotto getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(TipoCategoriaProdotto tipo) {
+		this.tipo = tipo;
+	}
+
+	public float getPrezzoAlKg() {
+		return prezzoAlKg;
+	}
+
+	public void setPrezzoAlKg(float prezzoAlKg) {
+		this.prezzoAlKg = prezzoAlKg;
 	}
 }

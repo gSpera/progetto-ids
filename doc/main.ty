@@ -31,12 +31,12 @@ La cooperativa ha una sede in cui i #attore[pescatori] portano al mattino il pes
 conservazione di pescato congelato). Nella sede si preparano le consegne da effettuare ai clienti, e da essa partono i 
 camioncini, guidati dai fattorini.  
 
-#attore[Il gestore della cooperativa] registra nel sistema pescherie e ristoranti clienti - inserendo il #attributo[tipo] (pescheria o ristorante), #attributo[nome pescheria/ristorante], #attributo[indirizzo], #attributo[e-mail], #attributo[username], #attributo[password] - e i #classeAttore[fattorini] (#attributo[nome], #attributo[username], #attributo[password]).
-Il gestore può inoltre inserire le tipologie di #classe[prodotti], ognuna identificata da un #attributo[codice], una #attributo[categoria] (e.g., pesci, crostacei, molluschi, etc.), un 
+#attore[Il gestore della cooperativa] #funzionalita[registra nel sistema pescherie e ristoranti clienti] - inserendo il #attributo[tipo] (pescheria o ristorante), #attributo[nome pescheria/ristorante], #attributo[indirizzo], #attributo[e-mail], #attributo[username], #attributo[password] - e i #classeAttore[fattorini] (#attributo[nome], #attributo[username], #attributo[password]).
+Il gestore può inoltre #funzionalita[inserire le tipologie di #classe[prodotti]], ognuna identificata da un #attributo[codice], una #attributo[categoria] (e.g., pesci, crostacei, molluschi, etc.), un 
 #attributo[tipo] (verace, allevamento, congelato), una #attributo[descrizione] e il #attributo[prezzo] (al Kg).  
  
 I #classeAttore[ristoranti] e le #classeAttore[pescherie] clienti possono #funzionalita[consultare il sistema per visualizzare i prodotti con i prezzi]. Solo i #attore[clienti registrati] dal gestore possono accedere al sistema per #funzionalita[inviare ordini]. Una volta effettuato l'accesso, una pescheria o un ristorante 
-cliente può selezionare i prodotti da acquistare dalla cooperativa - che dovranno essere consegnati il giorno dopo - 
+cliente può #funzionalita[selezionare i prodotti da acquistare dalla cooperativa] - che dovranno essere consegnati il giorno dopo - 
 specificando le rispettive #attributo[quantità]; il sistema predispone l’#classe[ordine] e lo #funzionalita[invia per e-mail] alla cooperativa.  
  
 Uno o più #attore[impiegati della cooperativa] #funzionalita[ricevono gli ordini] e, al mattino presto, preparano le consegne affidate ai fattorini. A 
@@ -45,7 +45,7 @@ consegne, e per ciascuna consegna l’#classe[elenco dei prodotti] (con #attribu
 fattorino farà firmare al cliente alla consegna. Effettuata una consegna, il #attore[fattorino] accede al sistema per #funzionalita[registrare che 
 l’ordine è stato consegnato] (il sistema registra data e ora di consegna). 
  
-Ogni settimana #funzionalita[il sistema genera in maniera automatica ed invia a ciascuna pescheria e a ciascun ristorante una fattura con 
+Ogni settimana #funzionalita[il sistema genera in maniera automatica ed invia a ciascuna pescheria e a ciascun ristorante una #classe[fattura] con 
 l’elenco degli ordini della settimana, e l’importo complessivo.]
 Ogni settimana, inoltre, il sistema #funzionalita[invia al gestore della cooperativa un report degli ordini, ordinato per pescheria/ristorante 
 cliente, e con il totale complessivo del venduto.] 
@@ -72,9 +72,6 @@ I pescatori non accedono in prima persona al software, invece è un impiegato a 
 Gli impiegati preparano gli ordini arrivati fino a quel momento(quindi anche un ordine arrivato pochi minuti prima) la mattina(l'orario specifico non viene riportato in quanto non ritenuto necessario per il software), dopo un determinato orario gl istessi impiegati saranno occupati a registrare i prodotti provenienti dai pescatori.
 
 Il software deve generare settimanalmente le fatture per i clienti.
-Le fatture sono in formato XML e compatibile con il sistema di interscambio dell'agenzia delle entrate.
-
-Per ogni cliente, il software dele registrare il _codice univoco_ necessario per la fatturazione.
 
 Ciascun ordine viene assegnato a un solo fattorino, come avviene la scelta del fattorino non è stato definito con precisione, dovrebbe essere ottimale.
 
@@ -86,7 +83,7 @@ Un interfaccia web non è stata ritenuta necessaria nell'immediata, e potrà ess
 in tale ambito è esclusa un interfaccia grafica non web, in quanto i fattorini userebbero dispositivi diversi tra di loro per accedere al sistema.
 
 == Revisione Requisiti
-1. Un cliente è definito da un tipo(pescheria o ristante), un indirizzo, indirizzo e-mail, un username e una password (usati per il login) e dal _codice univoco_(necessario per la fatturazione).
+1. Un cliente è definito da un tipo(pescheria o ristante), un indirizzo, indirizzo e-mail, un username e una password (usati per il login).
 + Impiegati e fattorini sono definiti da un username _univoco_ ed hanno un nome e una password.
 + I pescatori non hanno accesso al software.
 + Il software deve tenere traccia dei pescatori e di quali prodotti hanno fornito.
@@ -96,17 +93,17 @@ in tale ambito è esclusa un interfaccia grafica non web, in quanto i fattorini 
 + Il gestore della cooperativa può registrare nuovi clienti.
 + Gli impiegati si occupano della preparazione degli ordini e della registrazione dei prodotti.
 + La preparazione degli ordini e la registrazione dei prodotti devono essere eseguite ripetutamente e velocemente.
-10. Un impiegato non può iniziare la preparazione di un ordine già in preparazione da un altro impiegato.
+11. Un impiegato non può iniziare la preparazione di un ordine già in preparazione da un altro impiegato.
 + Il software ogni lunedì mattina crea un nuovo report, un report può essere generato anche manualmente.
 + Un report è una lista _ordinata per cliente_ dei prodotti venduti.
 + Un report contiene il totale del venduto, sia singolarmente per cliente sia totale.
-+ Il software ogni lunedì mattina crea una fattura per ogni cliente.
-15. Ogni fattura è specifica per un cliente e contiene una lista di prodotti venduti con il relativo costo, inoltre è presente il costo totale.
+15. Il software ogni lunedì mattina crea una fattura per ogni cliente.
++ Ogni fattura è specifica per un cliente e contiene una lista di prodotti venduti con il relativo costo, inoltre è presente il costo totale.
 + I prodotti possono essere fatturati una sola volta.
-+ Le fatture generate automaticamente dal software e vengono salvate per un invio futuro
-+ I fattorini possono visuallizare le proprie spedizioni.
-+ I fattorini possono indicare come _consegnato_ qualsiasi ordine.
-20. Ciascun ordine viene assegnato ad uno, ed un solo, fattorino
++ Le fatture inviate automaticamente dal software al corrispettivo cliente
++ I fattorini possono visualizzare le proprie spedizioni.
+20. I fattorini possono indicare come _consegnato_ qualsiasi ordine.
++ Ciascun ordine viene assegnato ad uno, ed un solo, fattorino
 + Tutti gli ordini partono da una sola sede
 
 == Glossario
@@ -129,55 +126,63 @@ in tale ambito è esclusa un interfaccia grafica non web, in quanto i fattorini 
 	inset: 3pt,
 	align: horizon,
 	[*ID*], [*Requisito*], [*Origine*],
-	[RF03], [Il sistema deve permettere a chiunque di visualizzare i prodotti disponibili all'acquisto], [6],
-	[RF04], [Il sistema deve permettere ai clienti la funzionalità di effettuare un' ordine], [7],
-	[RF05], [Il sistema deve permettere agli impiegati di prepare un ordine], [8],
-	[RF06], [Il sistema deve permettere agli impiegati di registrare un nuovo prodotto], [8],
-	[RFXX], [Il sistema deve permettere al gestore della cooperativa di registrare nuovi clienti], [X],
-	[RF07], [Il sistema dever permettere l'inserimento di più ordini in sequenza in modo agevole], [9],
-	[RF07], [Il sistema dever permettere l'inserimento di più prodotti in sequenza in modo agevole], [9],
-	[RF09], [Il sistema deve impedire a un impegato di iniziare la preparazione di un ordine già in preparazione da un altro impiegato], [10],
-	[RF10], [Il sistema deve generare un report ogni lunedì mattina], [11],
-	[RF11], [Il sistema deve permettere al solo gestore della cooperativa di generare il report manualmente], [11],
-	[RF16], [Il sistema deve generare le fatture automaticamente ogni lunedì mattina], [14],
-	[RF23], [Il sistema deve assegnare ciascun ordine a un fattorino], [20],
-	[RF24], [Il sistema deve permettere ai fattorini di visualizzare le proprie spedizioni], [18],
-	[RF25], [Il sistema deve permettere ai fattorini di indiciare come consegnato un ordine a loro assegnato], [19],
+	[RF01], [Il sistema deve permettere agli utenti di effettuare il login tramite username e password], [1, 2],
+	[RF02], [Il sistema deve permettere al gestore della cooperativa di registrare nuovi clienti], [8],
+	[RF03], [Il sistema deve permettere agli utenti, anche non loggati, di visualizzare i prodotti disponibili], [5],
+	[RF04], [Il sistema deve permettere ai clienti la funzionalità di effettuare un' ordine], [6],
+	[RF03], [Il sistema deve permettere agli impiegati di prepare un ordine], [9],
+	[RF04], [Il sistema deve permettere agli impiegati di registrare un nuovo prodotto], [9],
+	[RF06], [Il sistema dever permettere l'inserimento di più ordini in sequenza in modo agevole], [10],
+	[RF07], [Il sistema dever permettere l'inserimento di più prodotti in sequenza in modo agevole], [10],
+	[RF08], [Il sistema deve impedire a un impegato di iniziare la preparazione di un ordine già in preparazione da un altro impiegato], [11],
+	[RF09], [Il sistema deve generare un report ogni lunedì mattina], [12],
+	[RF10], [Il sistema deve permettere al solo gestore della cooperativa di generare il report manualmente], [12],
+	[RF11], [Il sistema deve generare le fatture automaticamente ogni lunedì mattina], [15],
+	[RF12], [Il sistema deve assegnare ciascun ordine a un solo fattorino], [21],
+	[RF13], [Il sistema deve permettere ai fattorini di visualizzare le proprie spedizioni], [19],
+	[RF14], [Il sistema deve permettere ai fattorini di indiciare come consegnato un ordine a loro assegnato], [20],
+	[RF15], [Il sistema deve inviare una e-mail alla cooperativa quando viene creato un nuovo ordine], [7],
+	[RF16], [Il sistema deve tenere traccia del pescatore relativo ad ogni prodotto], [4],
+	[RF17], [Il sistema si deve assicurare che ciascun ordine sia fatturato una e una sola volta], [17],
+	[RF18], [Il sistema deve inviare automaticamente le fatture al cliente], [18],
 )
 === Requisiti sui dati
 #table(
-	columns: (1fr, 1fr, 1fr),
+	columns: (2fr, 7fr, 1fr),
 	inset: 3pt,
 	align: horizon,
 	[*ID*], [*Requisito*], [*Origine*],
-	[RD01], [Ciascun cliente può essere una pescheria o un ristorante], [1],
-	[RF02], [Ciascun cliente ha un nome univoco, un indirizzo, un indirizzo e-mail e un codice univoco per la fatturazione], [1],
-	[RF03], [Ciascun cliente ha un username una password per il login], [1],
-	[RD04], [Ciascun impigati dispone di un username e una password per effettuare il login], [3],
-	[RF05], [Ciascun fattorino disponde di un username e una password per effettuare il login], [3],
-	[RF06], [Il software deve tenere traccia dei pescatori e quali prodotti hanno venduto], [5],
-	[RF07], [E' necessario registrare gli ordini creati], [7],
-	[RF08], [Il software deve registrare se un ordine è già in preparazione], [10],
-	[RF09], [Il software deve tenere traccia dei prodotti venduti e del loro prezzo], [12],
-	[RF10], [Per ogni prodotto venduto il software deve tenere traccia del cliente a cui è stato venduto], [12],
-	[RF11], [Il software deve tenere traccia se un prodotto è stato già fatturato], [16],
-
-	[RF21], [Ciascun prodotto può essere presente in una sola fattura], [16],
+	[RD01], [Un cliente può essere una pescheria o un ristorante], [1],
+	[RD02], [Ciascun utente atto al login ha un username una password], [2, 1],
+	[RD03], [Ogni cliente ha un nome univoco, un indirizzo, un indirizzo e-mail], [1],
+	[RD04], [Il software deve tenere traccia dei pescatori e quali prodotti hanno venduto], [4],
+	[RD05], [Ciascun ordine creato deve essere inviato tramite e-mail], [7],
+	[RD06], [Il software deve tenere traccia dello stato di ogni ordine e se è già in preparazione], [11],
+	[RD07], [Il software deve tenere traccia dei prodotti venduti e del loro prezzo], [14],
+	[RD08], [Per ogni prodotto venduto il software deve tenere traccia del cliente a cui è stato venduto], [14],
+	[RD09], [Il software deve tenere traccia se un prodotto è stato già fatturato], [17],
+	[RD10], [Il report deve riportare, in modo ordinato per il cliente tutti i prodotti venduti], [13],
+	[RD11], [Il report deve contenere il guadagno del venduto, diviso per cliente e anche nel totale],[14],
+	[RD12], [La fattura deve essere specifica per ogni cliente], [16],
+	[RD13], [La fattura deve contenere la lista dei prodotti venduti, con il relativo costo], [16],
+	[RD14], [La fattura deve contenere il costo totale dei prodotti], [16],
 )
 
 === Vincoli e altri requisiti
 #table(
-	columns: (1fr, 1fr),
+	columns: (2fr, 7fr, 1fr),
 	inset: 3pt,
 	align: horizon,
-	[*ID*], [*Requisito*],
-	[RNF01], [Il sistema deve essere collegato ad internet per poter accedere al sistema di interscambio],
-	[RNF02], [Il sistema deve avere modo di tenere traccia del tempo],
-	[RNF03], [Il sistema deve permettere l'accesso simultaneo di più utenti],
-	[RNF04], [Il sistema deve poter salvare i dati in modo permanente],
+	[*ID*], [*Requisito*], [*Origine*],
+	[RNF01], [Il sistema deve essere collegato ad internet per poter inviare email],[7, 5, 6],
+	[RNF02], [Il sistema deve avere modo di tenere traccia del tempo, in particolare del giorno corrente],[12, 15],
+	[RNF03], [Il sistema deve permettere l'accesso simultaneo di più utenti],[],
+	[RNF04], [Il sistema deve poter salvare i dati in modo permanente],[],
+	[RNF05], [Il sistema deve permettere l'accesso remoto di più utenti simultaneamente], [],
 )
 
 == Modellizione dei casi d'uso
+=== Attori e casi d'uso
 #grid(
 	columns: (1fr, 1fr),
 	gutter: 5pt,
@@ -190,8 +195,11 @@ in tale ambito è esclusa un interfaccia grafica non web, in quanto i fattorini 
 		- Tempo
 		- Fattorino
 	],[
-		*Attori secondari*:
-		- Servizio interscambio agezia delle entrate
+		*Attore secondario*:
+		- Impiegato
+		- Cliente
+		- Pescatore #footnote[Nota: Il pescatore non ha accesso diretto al software]
+		- Servizio E-Mail
 	],
 
 	[
@@ -204,67 +212,73 @@ in tale ambito è esclusa un interfaccia grafica non web, in quanto i fattorini 
 )
 
 #table(
-	columns: (2fr, 1fr, 1fr, 1fr),
+	columns: (5fr, 5fr, 3fr, 3fr),
 	inset: 5pt,
 	align: horizon,
 	[*Caso d'uso*], [*Attori primari*], [*Attori secondari*], [* Incl./Ext.*],
 
-    [Registrazione cliente], [Impiegato, Gestore Cooperativa], [Cliente], [],
-    [Registrazione impiegato], [Impiegato, Gestore Cooperativa], [Impiegato], [],
-    [Registrazione prodotto], [Impiegato], [Pescatore], [],
-    [Visualizzazione inventario], [Cliente, Utente non loggato], [], [],
-    [Acquisto prodotti], [Cliente], [], [Visuallizaione inventario],
-    [Genera report], [Tempo, Gestore Cooperativa], [], [],
-    [Visualizza report], [Gestore Cooperativa], [], [],
-    [Genera e invia fattura], [Tempo], [Sistema d'intescambio], [],
-    [Visualizza spedizioni], [Fattorino], [], [],
-    [Conferma consegna], [Fattorino], [], [],
+    [_UC01:_ Registrazione cliente], [Gestore Cooperativa], [Cliente], [],
+    [_UC02:_ Registrazione impiegato], [Gestore Cooperativa], [Impiegato], [],
+    [_UC03:_ Registrazione prodotto], [Impiegato], [Pescatore], [],
+    [_UC04:_ Visualizzazione inventario], [Cliente, Utente non loggato], [], [],
+    [_UC05:_ Acquisto prodotti], [Cliente], [Servizio E-Mail], [Visualizzazione inventario],
+    [_UC06:_ Genera report], [Tempo, Gestore Cooperativa], [], [],
+    [_UC07:_ Visualizza report], [Gestore Cooperativa], [], [],
+    [_UC08:_ Genera e invia fattura], [Tempo], [Cliente], [],
+    [_UC09:_ Visualizza spedizioni], [Fattorino], [], [],
+    [_UC10:_ Conferma consegna], [Fattorino], [], [],
+    [_UC11:_ Registrazione nuova tipologia prodotto], [Gestore Cooperativa], [], [],
 )
 === Diagramma dei casi d'uso
 #image("casi-duso.svg")
 
+#pagebreak()
+=== Scenari
+
 #table(
-	columns: (1fr, 2fr),
+	columns: (3fr, 5fr),
 	inset: 5pt,
 	align: horizon,
 	[*Caso d'uso*], [*Registrazione cliente*],
-	[*Attore Primario*], [Impiegato o Gestore della Cooperativa],
+	[*Attore Primario*], [Gestore della Cooperativa],
 	[*Attore Secondario*], [Cliente],
 	[*Descrizione*], [Viene registrato un nuovo cliente nel software],
-	[*Pre-Condizioni*], [L'impiegato ha il permesso di registrare nuovi clienti],
+	[*Pre-Condizioni*], [],
 	[*Sequenza di eventi principale*], [
-		1. L'impiegato o il gestore della cooperativa effettua il login al software
-		2. L'utente seleziona di voler registrare un cliente
-		3. L'utente inserisce i dati del cliente
+		1. Il gestore della cooperativa effettua il login al software
+		2. Il gestore seleziona di voler registrare un cliente
+		3. Il gestore inserisce i dati del cliente
+		4. Il sistema controlla che i dati siano validi
 	],
 	[*Post-Condizioni*], [Il cliente viene registrato nel software],
 	[*Casi d'uso correlati*], [],
 	[*Sequenza di eventi alternativi*], [
-		L'utente riceve un messaggio di errore se i dati sono erronei o nel caso ci sia un errore interno al software],
+		Il gestore riceve un messaggio di errore se i dati sono invalidi o nel caso ci sia un errore interno al software],
 )
 
 #table(
-	columns: (1fr, 2fr),
+	columns: (3fr, 5fr),
 	inset: 5pt,
 	align: horizon,
 	[*Caso d'uso*], [*Registrazione impiegato*],
-	[*Attore Primario*], [Impiegato o Gestore della Cooperativa],
+	[*Attore Primario*], [Gestore della Cooperativa],
 	[*Attore Secondario*], [Cliente],
 	[*Descrizione*], [Viene registrato un nuovo impiegato nel software],
-	[*Pre-Condizioni*], [L'impiegato ha il permesso di registrare nuovi impiegati],
+	[*Pre-Condizioni*], [],
 	[*Sequenza di eventi principale*], [
-		1. L'impiegato o il gestore della cooperativa effettua il login al software
-		2. L'utente seleziona di voler registrare un nuovo impiegato
-		3. L'utente inserisce i dati del nuovo impiegato
+		1. Il gestore della cooperativa effettua il login al software
+		2. Il gestore seleziona di voler registrare un nuovo impiegato
+		3. Il gestotore inserisce i dati del nuovo impiegato
+		4. Il sistema controlla che i dati siano validi
 	],
 	[*Post-Condizioni*], [Il nuovo impiegato viene registrato nel software],
 	[*Casi d'uso correlati*], [],
 	[*Sequenza di eventi alternativi*], [
-		L'utente riceve un messaggio di errore se i dati sono erronei o nel caso ci sia un errore interno al software],
+		Il gestore riceve un messaggio di errore se i dati sono invalidi o nel caso ci sia un errore interno al software],
 )
 
 #table(
-	columns: (1fr, 2fr),
+	columns: (3fr, 5fr),
 	inset: 5pt,
 	align: horizon,
 	[*Caso d'uso*], [*Registrazione prodotto*],
@@ -281,7 +295,7 @@ in tale ambito è esclusa un interfaccia grafica non web, in quanto i fattorini 
 )
 
 #table(
-	columns: (1fr, 2fr),
+	columns: (3fr, 5fr),
 	inset: 5pt,
 	align: horizon,
 	[*Caso d'uso*], [*Visualizzazione inventario*],
@@ -299,7 +313,7 @@ in tale ambito è esclusa un interfaccia grafica non web, in quanto i fattorini 
 )
 
 #table(
-	columns: (1fr, 2fr),
+	columns: (3fr, 5fr),
 	inset: 5pt,
 	align: horizon,
 	[*Caso d'uso*], [*Acquisto prodotti*],
@@ -317,7 +331,7 @@ in tale ambito è esclusa un interfaccia grafica non web, in quanto i fattorini 
 )
 
 #table(
-	columns: (1fr, 2fr),
+	columns: (3fr, 5fr),
 	inset: 5pt,
 	align: horizon,
 	[*Caso d'uso*], [*Genera report*],
@@ -336,7 +350,7 @@ in tale ambito è esclusa un interfaccia grafica non web, in quanto i fattorini 
 )
 
 #table(
-	columns: (1fr, 2fr),
+	columns: (3fr, 5fr),
 	inset: 5pt,
 	align: horizon,
 	[*Caso d'uso*], [*Visualizza report*],
@@ -352,12 +366,12 @@ in tale ambito è esclusa un interfaccia grafica non web, in quanto i fattorini 
 	[*Sequenza di eventi alternativi*], [],
 )
 #table(
-	columns: (1fr, 2fr),
+	columns: (3fr, 5fr),
 	inset: 5pt,
 	align: horizon,
 	[*Caso d'uso*], [*Genera e invio fattura*],
 	[*Attore Primario*], [Tempo],
-	[*Attore Secondario*], [Sistema d'interscambio],
+	[*Attore Secondario*], [Server EMail],
 	[*Descrizione*], [Vengono generate e salvate],
 	[*Pre-Condizioni*], [E' disponibile una connessione internet],
 	[*Sequenza di eventi principale*], [
@@ -370,7 +384,7 @@ in tale ambito è esclusa un interfaccia grafica non web, in quanto i fattorini 
 	[*Sequenza di eventi alternativi*], [],
 )
 #table(
-	columns: (1fr, 2fr),
+	columns: (3fr, 5fr),
 	inset: 5pt,
 	align: horizon,
 	[*Caso d'uso*], [*Visualizza spedizioni*],
@@ -388,7 +402,7 @@ in tale ambito è esclusa un interfaccia grafica non web, in quanto i fattorini 
 	[*Sequenza di eventi alternativi*], [],
 )
 #table(
-	columns: (1fr, 2fr),
+	columns: (3fr, 5fr),
 	inset: 5pt,
 	align: horizon,
 	[*Caso d'uso*], [*Conferma consegna*],
@@ -404,29 +418,33 @@ in tale ambito è esclusa un interfaccia grafica non web, in quanto i fattorini 
 	[*Casi d'uso correlati*], [],
 	[*Sequenza di eventi alternativi*], [],
 )
-/*
 #table(
-	columns: (1fr, 2fr),
+	columns: (3fr, 5fr),
 	inset: 5pt,
 	align: horizon,
-	[*Caso d'uso*], [**],
-	[*Attore Primario*], [],
+	[*Caso d'uso*], [*Registrazione nuova tipologia prodotto*],
+	[*Attore Primario*], [Gestore Cooperativa],
 	[*Attore Secondario*], [],
-	[*Descrizione*], [],
+	[*Descrizione*], [Viene inserito una nuova tipologia di prodotti],
 	[*Pre-Condizioni*], [],
-	[*Sequenza di eventi principale*], [],
-	[*Post-Condizioni*], [],
+	[*Sequenza di eventi principale*], [
+		1. Il gestore della cooperativa effettua il login al software
+		2. Il gestore seleziona di voler aggiungere una tipologia di prodotti
+		3. Il gestore inserisce i dati relativi alla tipologia di prodotto
+		4. Il sistema controlla che i dati siano validi
+	],
+	[*Post-Condizioni*], [La nuova tipologia di prodotto viene registrata nel software],
 	[*Casi d'uso correlati*], [],
-	[*Sequenza di eventi alternativi*], [],
-)*/
+	[*Sequenza di eventi alternativi*], [Il gestore riceve un messaggio di errore se i dati sono invalidi e nel caso ci sia un errore interno al software],
+)
 
-==  Diagramma delle classi
-#image("classi.svg")
-=== revisione, con dettagli implementativi
+== Modellazione dei dati e Diagramma delle classi
+#image("classi-small.svg")
+==  Diagramma delle classi <diagramma_classi>
 #image("classi-2.svg")
 
 == Caso d'uso
-Benchè il login non sia un caso d'uso effettivo è stato isolato dagli altri.
+_Nota:_ Benchè il login non sia un caso d'uso effettivo è stato isolato dagli altri.
 === Caso d'uso Login
 #image("login.svg")
 === Caso d'uso Registrazione cliente
@@ -434,7 +452,7 @@ Benchè il login non sia un caso d'uso effettivo è stato isolato dagli altri.
 
 == Stima dei costi
 #table(
-	columns: (1fr, 2fr, 2fr, 2fr),
+	columns: (1fr, 2fr, 2fr),
 	inset: 5pt,
 	align: horizon,
 	[], [*Valore*], [*Peso*],
@@ -445,6 +463,7 @@ Benchè il login non sia un caso d'uso effettivo è stato isolato dagli altri.
 	[*NEQ*], [3#footnote[Inventario, Consegne da effettuare, Report]], [Basso], 
 )
 
+#pagebreak()
 === Fattori correttivo
 #table(
 	columns: (2fr, 1fr),
@@ -481,3 +500,63 @@ caricati sul database dal file _init_testing.sql_:
 	[TCD03], [Controlliamo che la creazione di un cliente già esistente fallisca], [nome: pescheria_esistente], [Errore durante l'inserimento], [Nessun effetto],
 	[TCD04], [Controlliamo che l'inserimento di un cliente non esistente abbia successo], [nome: pescheria_NON_esistente], [Successo], [Viene creato il cliente],
 )
+
+#pagebreak()
+= Progettazione
+
+== Progettazione logica
+Il database scelto è stato _SQLite_, tra le motivazioni principali ci sono:
+- Uso di sintassi standard SQL
+- Bassi requisiti prestazionali
+- Facile installazione ed uso
+
+Di seguito i comandi necessari per instanziare il database (riportati anche in _database_schema.sql_)
+```SQL
+CREATE TABLE IF NOT EXISTS "prodotto" (
+	"codice"	INTEGER NOT NULL UNIQUE,
+	"categoria"	INTEGER,
+	"descrizione"	TEXT,
+	"stato"	INTEGER,
+	"pesoInKg"	INTEGER,
+	"pescatore"	TEXT,
+	PRIMARY KEY("codice" AUTOINCREMENT)
+);
+CREATE TABLE IF NOT EXISTS "utente" (
+	"username"	TEXT NOT NULL,
+	"password"	TEXT NOT NULL,
+	"tipo"	INTEGER NOT NULL,
+	"nome"	INTEGER,
+	"tipo_cliente"	INTEGER,
+	"indirizzo"	TEXT NOT NULL,
+	"email"	TEXT NOT NULL,
+	PRIMARY KEY("username")
+);
+CREATE TABLE IF NOT EXISTS "ordine" (
+	"codice"	INTEGER,
+	"fattorino"	TEXT,
+	FOREIGN KEY("fattorino") REFERENCES "utente"("username"),
+	PRIMARY KEY("codice")
+);
+CREATE TABLE IF NOT EXISTS "ordine_prodotti" (
+	"ordine"	INTEGER,
+	"prodotto"	INTEGER
+);
+CREATE TABLE IF NOT EXISTS "categoria_prodotto" (
+	"codice"	INTEGER,
+	"categoria"	INTEGER,
+	"tipo"	INTEGER,
+	"descrizione"	INTEGER,
+	"prezzo_al_kg"	REAL,
+	PRIMARY KEY("codice")
+);
+CREATE TABLE IF NOT EXISTS "fattura" (
+	"codice"	INTEGER,
+	"cliente"	TEXT,
+	FOREIGN KEY("cliente") REFERENCES "utente"("username"),
+	PRIMARY KEY("codice")
+);
+CREATE TABLE IF NOT EXISTS "fattura_prodotti" (
+	"fattura"	INTEGER,
+	"prodotto"	INTEGER
+);
+```

@@ -92,7 +92,8 @@ public class Cliente extends Utente {
 	
 	public enum Tipo {
 		Pescheria(0),
-		Ristorante(1),;
+		Ristorante(1),
+		;
 		
 		private int id;
 

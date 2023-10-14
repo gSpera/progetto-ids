@@ -29,12 +29,6 @@ public class BuondaryImpiegato {
 			out.println("Benvenuto");
 			out.println("1) Registra prodotto");
 			out.println("2) Prepara ordine");
-			if (impiegato.puoRegistrareClienti()) {
-				out.println("3) Registra nuovo cliente");
-			}
-			if (impiegato.puoRegistrareImpiegati()) {
-				out.println("4) Registra nuovo impiegato");
-			}
 			out.println("0) Esci");
 			
 			int scelta = in.nextInt("Cosa vuoi fare??", v -> v >= 0 && v <= 4, "La selezione non è valida");
@@ -47,23 +41,6 @@ public class BuondaryImpiegato {
 				log.info("BoundaryImpiegato: Prepara ordine");
 				preparaOrdine();
 				break;
-			case 3:
-				if (!impiegato.puoRegistrareClienti()) {
-					log.warn("BoundaryImpiegato: Registrazione cliente, NON ABILITATA");
-					out.println("Non ti è possibile registrare clienti");
-				} else {
-					log.info("BoundaryImpiegato: Registrazione cliente, abilitata");
-					registraCliente();
-				}
-				break;
-			case 4:
-				if (!impiegato.puoRegistrareImpiegati()) {
-					log.warn("BoundaryImpiegato: Registrazione impiegato, NON ABILITATA");
-					out.println("Non ti è possibile registrare impiegati");
-				} else {
-					log.info("BoundaryImpiegato: Registrazione impiegato, abilitato");
-					registraImpiegato();
-				}
 			case 0:
 				out.println("BoundaryImpiegato: Esci");
 				return;
@@ -71,22 +48,6 @@ public class BuondaryImpiegato {
 		}
 	}
 
-	private void registraImpiegato() {
-		log.info("BoundaryImpiegato: registraImpiegato");
-	}
-
-	private void registraCliente() {
-		log.info("BoundaryImpiegato: registraCliente");
-		String nome = in.nextLine("Inserire il nome del cliente:", s -> s.length() > 0, "Il nome non può essere vuoto");
-		String indirizzo = in.nextLine("Inserire l'indirizzo per la spedizione:", s -> s.length() > 0, "L'indirizzo non può essere vuoto");
-		String email = in.nextLine("Inserire l'email"); // Può essere vuoto
-		String codice_fatturazione = in.nextLine("Inserire il codice univoco per la fatturazione (6 caratteri):", s -> s.length() == 6, "Codice non valido");
-		boolean ok = MainController.the().registraCliente(nome, indirizzo, email, codice_fatturazione);
-		if (!ok) {
-			log.error("ERRORE durante la registrazione del cliente");
-			log.error("E' possibile riprovare a registrare il cliente");
-		}
-	}
 
 	private void preparaOrdine() {
 		log.info("BoundaryImpiegato: preparaOrdine");

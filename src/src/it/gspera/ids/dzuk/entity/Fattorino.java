@@ -6,5 +6,4 @@ public class Fattorino extends Utente {
 		this.username = username;
 		this.password = password;
 	}
-
 }

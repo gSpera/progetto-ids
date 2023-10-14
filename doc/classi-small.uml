@@ -1,0 +1,53 @@
+@startuml
+object CategoriaProdotto {
+    - codice
+    - categoria
+    - tipo
+    - descrizione
+    - prezzo al kg
+}
+object Utente {
+    - username
+    - password
+}
+object Cliente {
+    - tipologia cliente
+    - nome
+    - indirizzo
+    - e-mail
+}
+object Impiegato {
+    - nome
+}
+object Fattorino
+object Fattura {
+    - codice
+}
+object Prodotto {
+    - codice
+    - stato
+    - descrizione
+    - peso in kg
+}
+
+object Pescatore {
+    - nome
+}
+
+object Ordine {
+    - codice
+}
+
+Utente "1" <|--- "1" Cliente
+Utente "1" <|--- "1" Impiegato
+Utente "1" <|--- "       1" Fattorino
+
+Prodotto "1" ---o "1" CategoriaProdotto : categoria
+Prodotto "         1" --o "1" Pescatore : pescato da
+
+Cliente "1" ---o "      1" Fattura : cliente
+Prodotto "1...*" ---o Fattura : prodotti
+
+Ordine "       0...*" ---o "1" Fattorino : assegnato a
+Ordine "1" --- "1...*" Prodotto : prodotti
+@enduml

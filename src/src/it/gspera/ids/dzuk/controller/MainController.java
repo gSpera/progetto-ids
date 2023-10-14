@@ -14,19 +14,22 @@ import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import it.gspera.ids.dzuk.entity.Ordine;
 import it.gspera.ids.dzuk.dao.ClienteDAO;
 import it.gspera.ids.dzuk.dao.ProdottoDAO;
 import it.gspera.ids.dzuk.dao.UtenteDAO;
 import it.gspera.ids.dzuk.entity.CategoriaProdotto;
 import it.gspera.ids.dzuk.entity.Cliente;
+import it.gspera.ids.dzuk.entity.Fattorino;
 import it.gspera.ids.dzuk.entity.Fattura;
 import it.gspera.ids.dzuk.entity.Prodotto;
 import it.gspera.ids.dzuk.entity.Utente;
 import it.gspera.ids.dzuk.utility.ClienteBuilderException;
-import it.gspera.ids.dzuk.utility.FattureManager;
+import it.gspera.ids.dzuk.utility.EMailServer;
 import it.gspera.ids.dzuk.utility.MainControllerBuilderException;
-import it.gspera.ids.dzuk.utility.NoOpFattureManagerImpl;
 import it.gspera.ids.dzuk.utility.MainControllerBuilderException.Tipo;
+import it.gspera.ids.dzuk.utility.NoOpEmailServer;
+import it.gspera.ids.dzuk.utility.None;
 import it.gspera.ids.dzuk.utility.Risultato;
 
 /**
@@ -78,18 +81,12 @@ public class MainController {
 			controller.utenteDao = u;
 			return this;
 		}
-		public Builder conClienteDAO(ClienteDAO c) {
-			controller.clienteDao = c;
+		public Builder conEMailServer(EMailServer s) {
+			controller.emailServer = s;
 			return this;
 		}
-		/**
-		 * conFattureManager importa il manager per le fatture,
-		 * se non viene usato questo metodo verra usato <i>NoOpFattureManagerImpl</i>.
-		 * 
-		 * @see it.gspera.ids.dzuk.utility.NoOpFattureManagerImpl
-		 */
-		public Builder conFattureManager(FattureManager f) {
-			controller.fattureManager = f;
+		public Builder conClienteDAO(ClienteDAO c) {
+			controller.clienteDao = c;
 			return this;
 		}
 		
@@ -111,10 +108,9 @@ public class MainController {
 			if (controller.clienteDao == null) {
 				throw new MainControllerBuilderException(Tipo.ClienteDAONonDefinito);
 			}
-			if (controller.fattureManager == null) {
-				controller.fattureManager = new NoOpFattureManagerImpl();
+			if (controller.emailServer == null) {
+				controller.emailServer = new NoOpEmailServer();
 			}
-			
 			MainController.theInstance = controller;
 		}
 	}
@@ -133,7 +129,7 @@ public class MainController {
 	private ProdottoDAO prodottoDao;
 	private UtenteDAO utenteDao;
 	private ClienteDAO clienteDao;
-	private FattureManager fattureManager;
+	private EMailServer emailServer;
 	
 	
 	public static MainController the() {
@@ -183,7 +179,7 @@ public class MainController {
 
 	public boolean registraProdotto(String categoriaString, String descrizione, float prezzoAlKg, float pesoInKg) {
 		log.info("Registrazione nuovo prodotto:" + categoriaString + " " + descrizione + " " + prezzoAlKg + " " + pesoInKg);
-		CategoriaProdotto categoria = new CategoriaProdotto(categoriaString);
+		CategoriaProdotto categoria = this.prodottoDao.categoriaDaDescrizione(categoriaString);
 		Risultato<Prodotto> risultato = this.prodottoDao.registraProdottoEAssegnaCodice(categoria, descrizione, prezzoAlKg, pesoInKg);
 		if (!risultato.haAvutoSuccesso()) {
 			log.error("Impossibile registrare un nuovo prodotto:" + risultato.getErrore());
@@ -211,6 +207,10 @@ public class MainController {
 					.costruisci();
 			
 			Risultato<Cliente> risultato = this.clienteDao.registraCliente(c);
+			
+			if (!risultato.haAvutoSuccesso()) {
+				this.log.error("Impossibile creare il cliente: " + c.getNome() + ": " + risultato.getErrore());
+			}
 			
 			return true;
 		} catch (ClienteBuilderException e) {
@@ -256,8 +256,8 @@ public class MainController {
 			
 			float totaleCliente = 0;
 			for (Prodotto p : prodotti) {
-				report.println(" - " + p.getDescrizione() + " " + p.getPrezzoAlKg() * p.getPesoInKg() + "€ (" + p.getPrezzoAlKg() + " €/Kg)");
-				totaleCliente += p.getPrezzoAlKg() * p.getPesoInKg();
+				report.println(" - " + p.getDescrizione() + " " + p.getCategoria().getPrezzoAlKg() * p.getPesoInKg() + "€ (" + p.getCategoria().getPrezzoAlKg() + " €/Kg)");
+				totaleCliente += p.getCategoria().getPrezzoAlKg() * p.getPesoInKg();
 			}
 			report.println("Totale per " + c.getNome() + ": " + totaleCliente + "€");
 			report.println();
@@ -277,10 +277,21 @@ public class MainController {
 			log.info("generaEInviaFatture: Cliente " + c.getNome());
 			List<Prodotto> prodotti = prodottoDao.prodottiDaFatturarePerCliente(c);
 			
-			Fattura fattura = new Fattura(c, prodotti);
-			fattureManager.inviaFattura(fattura);
+			Fattura f = new Fattura(c, prodotti);
+			Risultato<None> errore = this.emailServer.inviaFattura(f);
+			if (!errore.haAvutoSuccesso()) {
+				this.log.error("Impossibile inviare la fattura al cliente: " + c.getNome() + ": " + errore.getErrore());
+			}
 		}
 		log.info("generaEInviaFatture: Tutte le fatture sono state inviate");
 		return true;
+	}
+
+	public List<Ordine> ordiniPerFattorino(Fattorino fattorino) {
+		return this.prodottoDao.ordiniPerfattorino(fattorino);
+	}
+
+	public void consegnaOrdine(Ordine o) {
+		this.prodottoDao.consegnaOrdine(o);
 	}
 }

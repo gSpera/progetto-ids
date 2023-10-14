@@ -2,11 +2,12 @@ package it.gspera.ids.dzuk.utility;
 
 import it.gspera.ids.dzuk.entity.Fattura;
 
-public class NoOpFattureManagerImpl implements FattureManager {
+public class NoOpEmailServer implements EMailServer {
 
 	@Override
 	public Risultato<None> inviaFattura(Fattura f) {
-		return new Risultato<None>(new None());
+		System.err.println("No Op Email Server");
+		return null;
 	}
 
 }

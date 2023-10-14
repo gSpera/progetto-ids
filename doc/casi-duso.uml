@@ -1,15 +1,15 @@
 @startuml
 left to right direction
 actor "Gestore Cooperativa" as gestore
-actor "Impiegato" as imp 
+actor "Impiegato" as impiegato
 actor "Cliente" as cliente
 actor "Utente\nNon loggato" as utente
 actor "Pescatore" as pescatore
 actor "Pescheria" as cliente_pescheria
 actor "Ristorante" as cliente_ristorante
 actor "Tempo" as tempo
-actor "Sistema\ndi interscambio" as sistema_fatture
 actor "Fattorino" as fattorino
+actor "Servizio Email" as servizio_email
 
 cliente_ristorante -up-|> cliente
 cliente_pescheria  -up-|> cliente
@@ -20,47 +20,40 @@ rectangle "Software dzuk" {
     usecase "Registrazione prodotto" as registra_prodotto
     usecase "Visualizzazione inventario" as visualizza_inventario
     usecase "Acquisto prodotti" as acquisto_prodotti
+    usecase "Visualizza spedizioni" as visualizza_spedizioni
     usecase "Genera report" as genera_report
     usecase "Visualizza report" as visualizza_report
     usecase "Genera e invia fattura" as genera_invio_fattura
-    usecase "Visualizza spedizioni" as visualizza_spedizioni
     usecase "Conferma consegna" as conferma_spedizione
+    usecase "Registra tipologia prodotto" as registra_tipologia_prodotto
 }
 
-imp     --- registra_cliente
-note bottom of link
-    L'impiegato deve essere abilitato
-    per la registrazione dei clienti
-end note
-imp     --- registra_impiegato
-note bottom of link
-    L'impiegato deve essere abilitato
-    per la registrazione degli impiegati
-end note
-
-registra_cliente   --- gestore
+gestore --- registra_cliente
 registra_cliente --- cliente
-note of link: Secondario
-registra_cliente -[hidden]l- registra_impiegato
-registra_impiegato --- gestore
-'registra_impiegato --- imp
-'note of link: Secondario
-registra_prodotto  --- imp
-registra_prodotto  ---- pescatore
 note right of link: Secondario
+
+gestore --- registra_impiegato
+registra_impiegato --- impiegato
+note right of link: Secondario
+
+registra_prodotto --- impiegato
+pescatore --- registra_prodotto
+note right of link: Secondario
+
 visualizza_inventario --- cliente
 visualizza_inventario --- utente
 acquisto_prodotti --- cliente
-acquisto_prodotti -.> visualizza_inventario : <<Include>>
-tempo   --- genera_report
+servizio_email --- acquisto_prodotti
+note right of link: Secondario
 gestore --- genera_report
 gestore --- visualizza_report
-genera_report -[hidden]l- visualizza_report
-tempo -.- genera_invio_fattura
-sistema_fatture --- genera_invio_fattura
-note of link: Secondario
-fattorino --- visualizza_spedizioni
-fattorino --- conferma_spedizione
-cliente --u- conferma_spedizione
-note of link: Secondario
+tempo --- genera_invio_fattura
+genera_invio_fattura --- cliente
+note right of link: Secondario
+visualizza_spedizioni --- fattorino
+conferma_spedizione --- fattorino
+gestore --- registra_tipologia_prodotto
+
+acquisto_prodotti --l- visualizza_inventario
+note of link: Estende
 @enduml
